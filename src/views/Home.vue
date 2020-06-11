@@ -1,18 +1,29 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TimeRace msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
+<style scoped>
+
+</style>
+
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import TimeRace from '@/components/TimeRace.vue'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    TimeRace
+  },
+  mounted () {
+    this.$nextTick(function () {
+      window.setInterval(() => {
+        this.$store.dispatch('updateRace')
+        console.log('Race Updated')
+      }, this.$store.state.settings.updateInterval)
+    })
   }
 }
 </script>

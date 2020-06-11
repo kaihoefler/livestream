@@ -1,0 +1,22 @@
+{
+	"raceName": "1h Record trial Arena Geisingen",
+	"raceID": 13,
+	"flagStatus": "GREEN",
+	"elapsedTime": "5:15",
+	"timeOfDay": "22:28:33",
+	"lapsComplete": 17,
+	"lapsToGo": 0,
+	"trackName": "Arena Geisingen",
+	"competitors": [
+		{
+			"number": "23",
+			"position": 1,
+			"lapsComplete": 17,
+			"firstName": "",
+			"lastName": "",
+			"totalTime": "5:14.349",
+			"bestLap": "0:15.497",
+			"lastLap": "0:18.591"
+		}
+	]
+}

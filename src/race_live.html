@@ -1,0 +1,509 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+<style>
+
+BODY {
+	font-family: 'Ubuntu', sans-serif;
+	background-color:green;
+	
+/* 	Farbschema blau mit Hintergrund 
+	color:0078b3; 
+*/
+/* Farbschema weis ohne Hintergrund */	
+	color:ffffff;
+	text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+
+}
+
+#raceName
+{
+	position:absolute;
+	top:50px;
+	left:0px;
+	width:750px;
+	height:50px;
+	font-size:40px;
+	font-style:italic;
+	text-align:right;
+	/* box-shadow: 0 8px 2px -2px #ff0000; */
+	border-bottom: thick solid #e30614;
+	display:none;
+/* 	Farbschema blau mit Hintergrund 
+	color:0078b3; 
+	background-color: rgba(255, 255, 255, 0.9); 
+*/
+
+/* Farbschema weis ohne Hintergrund */	
+}
+
+
+#zeit
+{
+	position:absolute;
+	top:925px;
+	left:1550px;
+	height:50px;
+	width:200px;
+	text-align:Center;
+	
+	font-size:40px;
+/* 	Farbschema blau mit Hintergrund 
+	background-color: rgba(255, 255, 255, .9);
+	border-radius: 40px;
+	border: 4px solid #0078b3;
+	background-color: rgba(255, 255, 255, .9); 
+	color:0078b3; 
+*/
+	display:none;
+}
+
+#laps
+{
+	position:absolute;
+	top:925px;
+	left:1290px;
+	/* color:0078b3; */
+	height:50px;
+	width:250px;
+	text-align:Center;
+	
+	font-size:40px;
+ /* 	Farbschema blau mit Hintergrund 
+    background-color: rgba(255, 255, 255, 1);
+	border-radius: 40px;
+	border: 4px solid #0078b3; 
+	background-color: rgba(255, 255, 255, .9); 
+*/
+
+	display:none;
+}
+
+#laptimes
+{
+	position:absolute;
+	top:300px;
+	left:50px;
+	width:300px;
+	height:250px;
+	/* color: #0078b3; */
+	display:none;
+	
+	font-size:40px;
+/* 	Farbschema blau mit Hintergrund 
+ 	border-radius: 20px;
+	border: 4px solid #0078b3;
+	background-color: rgba(255, 255, 255, 0.9);
+	text-align:Center;
+ */
+	padding-left:10px;
+	padding-top:10px;
+
+
+	
+}
+
+#laptimes table
+{
+	/* color: #0078b3; */
+	font-size:30px;
+	color:ffffff;
+	text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+	
+}
+
+
+#speed
+{
+	position:absolute;
+	top:925px;
+	left:150px;
+	width:550px;
+	height:50px;
+	display:none;
+	
+	font-size:40px;
+/* 	Farbschema blau mit Hintergrund 
+ 	color:#0078b3;
+	border-radius: 40px;
+	border: 4px solid #0078b3;
+	background-color: rgba(255, 255, 255, 0.9);
+ */
+	text-align:Center;
+	
+}
+
+/* 	Farbschema blau mit Hintergrund 
+#speed .positivDelta
+{
+	color:#0078b3;
+	
+}
+*/
+
+#speed .negativDelta
+{
+	color:#e30614;
+	text-shadow: none;
+}
+
+
+
+</style>
+<link rel="stylesheet" href="assets/font.css">		
+<script src="assets/jquery-2.1.4.min.js"></script>
+<script src="assets/race_handling.js"></script>
+<script>
+
+var flagStatus = "";
+var raceId = 0;
+var raceName = "";
+var elapsedTime = "";
+var timeOfDay = "";
+var lapsComplete = 0;
+var lapsToGo = 0;
+
+var showTime = false;		//Zeit wird aktualisiert...
+var showRaceName = true;
+var showLapTimes = true;
+var numbLapTimes = 5;
+var speedVisible = true;
+
+var showRefSpeed = false;
+var refSpeed = 0;
+
+var lapDist = 0.2;
+
+var laptimes = [];
+
+
+
+////////////////////////////////////////
+/// Liest die Daten vom Web-Service und 
+///
+function FetchAndRefresh()
+{
+	url = "http://localhost/agilive/stdwr/Race_times_example.json";
+	//url = "http://localhost:8090/race";
+
+	$.getJSON( url, function( data ) {
+		procData(data);
+	});
+	
+	callFetchAndRefresh();
+}
+
+function callFetchAndRefresh()
+{
+	window.setTimeout("FetchAndRefresh()", 500);
+}
+
+  /////////////////////////////////////////////
+ /// Liest die Renn-Stammdaten aus...
+///
+function procData(data)
+{
+	if (data === null) return;
+	$.each( data, function( key, val ) {
+		if ( key == "raceName" ) 		{raceName = val;		}
+		if ( key == "timeOfDay")		{timeOfDay = val;	}
+		if ( key == "elapsedTime")		{elapsedTime = val;	}
+		if ( key == "flagStatus")		{flagStatus = val;		}
+		if ( key == "lapsComplete")		{lapsComplete = val;		}
+		if ( key == "lapsToGo")			{lapsToGo = val;		}
+		if ( key == "competitors")		{competitors = val;		}
+		
+	});
+	
+	// Setzt denn Renn-Namen im Titel
+	if(raceName != "") {
+		
+		$('#raceName').html(raceName + "&nbsp;");
+	} else {
+		$('#raceName').html(raceName + "&nbsp;");
+		$('#raceName').fadeOut(2000);		
+	}
+	
+	// Sort the Competitors
+	competitors.sort((a, b) => (a.position > b.position) ? 1 : -1);
+	
+	// Only display Speed and Laptimes if we have completed Laps
+	if (competitors[0].lapsComplete === undefined){
+		$('#speed').html(  "&nbsp;");
+		//console.log(competitors[0].lapsComplete);
+	}else{
+		
+		totalTime = calc_totalTime_in_seconds(competitors[0].totalTime);
+		// First Laptime not before 10 seconds
+		if (totalTime>10){
+			// store laptime of leading Athlete
+			laptimes[competitors[0].lapsComplete] = { "lap" : competitors[0].lapsComplete, "time" :  calc_totalTime_in_seconds(competitors[0].lastLap)};
+		}
+		
+		//calculate Speed
+		if (totalTime > 0) {
+			speed = (competitors[0].lapsComplete * lapDist / calc_totalTime_in_seconds(competitors[0].totalTime) * 3600);
+			speedText = speed.toFixed(3);
+		}else {
+			speed = 0;
+			speedText = " - ";
+		}
+		//Display Speed
+		if (showRefSpeed && speed != 0){
+			delta = (speed - refSpeed);
+			deltaHtml = '<span class="' + (delta<0 ? "negativDelta" : "positivDelta" ) + '">' + (delta<0?"":"+") + delta.toFixed(3) + "</span>";
+			$('#speed').html("Av. Speed: " + speedText + " (" + deltaHtml + ")");
+		} else {
+			$('#speed').html("Average Speed: " + speedText +  "&nbsp;");
+		}
+		
+		html = create_laptime_table( laptimes.slice(-1*numbLapTimes).sort((a, b) => (a.lap < b.lap) ? 1 : -1));
+		
+		$('#laptimes').html(  html );
+		
+	}
+
+	//Rennen l�uft...
+	if(flagStatus == "GREEN")
+	{
+		$('#raceName').fadeIn(1000);
+		showTime = true;
+		$('#zeit').fadeIn(1000);
+		$('#laps').fadeIn(1000);
+		$('#speed').fadeIn(1000);
+		if (showLapTimes) $('#laptimes').fadeIn(1000);
+	}
+	
+	//Rennen vorbei / nicht aktiv.
+	if(flagStatus == "RED")
+	{
+		$('#raceName').fadeIn(1000);
+		$('#zeit').fadeOut(1000);
+		$('#laps').fadeOut(1000);		
+		showTime = false;
+		$('#speed').fadeOut(1000);
+		$('#laptimes').fadeOut(1000);
+		
+	}
+	
+	//Rennen kurz vor Start - noch nicht aktiv
+	if(flagStatus == "PURPLE")
+	{
+		$('#raceName').fadeIn(1000);
+		showTime = false;
+		//$('#zeit').fadeIn(1000);
+		//$('#zeit').html("00:00");
+		$('#zeit').fadeOut(1000);
+		$('#laps').fadeOut(1000);	
+		$('#speed').fadeOut(1000);		
+		$('#laptimes').fadeOut(1000);		
+
+	}
+	
+	//Rennen vorbei - Status anzeigen.
+	if(flagStatus == "FINISH")
+	{
+		//$('#speed').fadeIn(1000);
+		//speedVisible = true;		
+		$('#zeit').fadeOut(1000);
+		$('#laps').fadeOut(1000);		
+		$('#laptimes').fadeOut(1000);		
+		
+	}
+	
+}
+
+
+function create_laptime_table(laptimes)
+{
+	htmlItems = [];
+	htmlItems.push('<table ><tr>');
+					//items.push('<td width=90>Pos</td>');
+	htmlItems.push('<td width=60>Lap</td>');		
+	htmlItems.push('<td width=100>Time</td>');		
+	htmlItems.push('<td width=100>Speed</td>');		
+	htmlItems.push('</tr>');
+	laptimes.forEach(function (value) {
+		htmlItems.push('<tr><td> ');
+		htmlItems.push(value.lap.toString());
+		htmlItems.push('</td><td> ');
+		htmlItems.push(value.time.toFixed(2));
+		htmlItems.push('</td><td> ');
+		htmlItems.push((lapDist/value.time* 3600).toFixed(2));
+		htmlItems.push('</td></tr> ');
+	}
+	);
+
+	htmlItems.push('</table>');
+	return htmlItems.join('');
+}
+
+
+function calc_totalTime_in_seconds(totalTime){
+
+	parts = totalTime.split(":");
+	parts = parts.reverse();
+	elapsedSeconds = 0.0;
+	if (0 in parts){
+		elapsedSeconds += parseFloat(parts[0]);
+	}
+	if (1 in parts){
+		elapsedSeconds += parseInt(parts[1])*60;
+	}
+	if (2 in parts){
+		elapsedSeconds += parseInt(parts[2])*3600;
+	}
+	return elapsedSeconds;
+}
+
+function calc_elapsedTime_in_seconds(elapsedTime){
+
+	parts = elapsedTime.split(":");
+	parts = parts.reverse();
+	elapsedSeconds = 0;
+	if (0 in parts){
+		elapsedSeconds += parseInt(parts[0]);
+	}
+	if (1 in parts){
+		elapsedSeconds += parseInt(parts[1])*60;
+	}
+	if (2 in parts){
+		elapsedSeconds += parseInt(parts[2])*3600;
+	}
+	return elapsedSeconds;
+}
+
+function calc_startTime(elapsedTime, timeOfDay){
+
+	parts = timeOfDay.split(":");
+	
+	date_timeOfDay = new Date();
+	date_timeOfDay.setHours(parts[0]);
+	date_timeOfDay.setMinutes(parts[1]);
+	date_timeOfDay.setSeconds(parts[2]),
+	date_timeOfDay.setMilliseconds(0);
+	
+	return new Date(date_timeOfDay.getTime() - (calc_elapsedTime_in_seconds(elapsedTime) * 1000));
+	//console.log(date_timeOfDay);	
+
+}
+
+	
+
+
+////////////////////////////////////////////
+// Zeit-Funktion, aktualisiert die Zeit....
+//
+function refreshTime()
+{
+	
+	jetzt = new Date();
+//	console.log(calc_startTime(elapsedTime, timeOfDay));
+
+
+	start = calc_startTime(elapsedTime, timeOfDay); 
+	diff = new Date(jetzt - start);
+
+	h = diff.getHours();
+	if(h<10)
+		h = "0" + h;
+	m = diff.getMinutes();
+	if(m<10)
+		m = "0" + m;
+	s = diff.getSeconds();
+	if(s<10)
+		s = "0" + s;
+	
+	if(showTime){
+		$('#zeit').html(m + ":" + s);
+	} else {
+		$('#zeit').html();
+	}
+	
+	if(showTime){
+		$('#zeit').html(elapsedTime );
+	} else {
+		$('#zeit').html();
+	}	
+	callRefreshTime();
+}
+
+// Call-Funktion f�r die Zeit-Anzeige
+function callRefreshTime()
+{
+	window.setTimeout("refreshTime()", 500);
+}
+
+  ////////////////////////////////////////////
+ // Zeit-Funktion, aktualisiert die Zeit....
+//
+function refreshLaps()
+{
+	
+	gesamtlaps = lapsComplete + lapsToGo;
+	if(showTime){
+	//	$('#laps').html("Lap " + lapsComplete + ' / ' + gesamtlaps);
+		$('#laps').html("Lap " + lapsComplete );
+	} else {
+		$('#laps').html();
+	}
+		
+	callRefreshLaps();
+}
+
+// Call-Funktion f�r die Zeit-Anzeige
+function callRefreshLaps()
+{
+	window.setTimeout("refreshLaps()", 500);
+}
+
+
+
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars()
+{
+    var vars = [], hash;
+	if (window.location.href.indexOf('?') == -1) return vars;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+
+  /////////////////////////////////////////////////////////////
+ /// Wenn das Laden des Dokuments beendet ist....
+///
+$( document ).ready(function() {
+	console.log( "URL Parameters: refSpeed=<value e.g. 49.3>  hideLapTimes");
+	urlVars = getUrlVars();
+	if ('refSpeed'  in urlVars && urlVars['refSpeed'] !== undefined){
+		showRefSpeed = true;
+		refSpeed = parseFloat(urlVars['refSpeed']);
+		console.log(refSpeed);
+	}
+
+	if ('hideLapTimes'  in urlVars){
+		showLapTimes = false;
+		console.log("hideLapTimes was set. Will not show LapTimes");
+	}
+
+    FetchAndRefresh();
+	refreshTime();	
+	callRefreshLaps();
+
+});
+
+
+</script>
+<body>
+<div id="raceName"></div>
+<div id="zeit"></div>
+<div id="laps"></div>
+<div id="speed"></div>
+<div id="laptimes"></div>
+
+</body>
