@@ -1,12 +1,12 @@
 <template>
   <div class="hello">
-    <div id="raceName" v-if="displayControl.showRaceName" >{{currentRace.raceName}}</div>
-    <div id="zeit" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showRaceTime" >{{currentRace.elapsedTime}}</div>
-    <div id="laps" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLaps" >Lap {{currentRace.lapsComplete}}</div>
-    <div id="speed" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showSpeed" >Avg. Speed {{speed.text}}
+    <div id="raceName" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="displayControl.showRaceName" >{{currentRace.raceName}} &nbsp;</div>
+    <div id="zeit" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showRaceTime" >{{currentRace.elapsedTime}}</div>
+    <div id="laps" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLaps" >Lap {{currentRace.lapsComplete}}</div>
+    <div id="speed" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showSpeed" >Avg. Speed {{speed.text}}
       <span v-if="displayControl.showRefSpeed" v-bind:class="[(speed.value - displayControl.refSpeed) < 0 ? 'negativDelta' : 'positivDelta']">( {{ (speed.value - displayControl.refSpeed).toFixed(3)}} )</span></div>
 
-    <div v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLapTimes" id="laptimes">
+    <div id="laptimes" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLapTimes">
       <table >
         <tr><td width=60>Lap</td><td width=100>Time</td><td width=100>Speed</td></tr>
         <tr v-for="laptime in laptimes" :key="laptime.lap">
@@ -73,7 +73,7 @@ export default {
     },
 
     laptimes () {
-      var numLapTimes = this.$store.state.settings.numLapTimes
+      var numLapTimes = this.$store.state.displayControl.timeRace.numLapTimes
       var laptimes = this.$store.state.currentRace.laptimes.slice(-1 * numLapTimes).sort((a, b) => (a.lap < b.lap) ? 1 : -1)
       return laptimes.filter((element) => {
         return element !== undefined
@@ -111,15 +111,16 @@ export default {
   font-size:40px;
   font-style:italic;
   text-align:right;
-  /* box-shadow: 0 8px 2px -2px #ff0000; */
   border-bottom: thick solid #e30614;
- /* Farbschema blau mit Hintergrund
-  color:0078b3;
+  padding-right:10px;
+
+}
+
+#raceName.whiteBG
+{
+  color:#0078b3;
   background-color: rgba(255, 255, 255, 0.9);
-*/
-
-/* Farbschema weis ohne Hintergrund */
-
+  text-shadow: none;
 }
 
 #zeit
@@ -132,35 +133,34 @@ export default {
   text-align:Center;
 
   font-size:40px;
-/* Farbschema blau mit Hintergrund
-  background-color: rgba(255, 255, 255, .9);
-  border-radius: 40px;
-  border: 4px solid #0078b3;
-  background-color: rgba(255, 255, 255, .9);
-  color:0078b3;
-*/
-  /* Farbschema weis ohne Hintergrund */
-  color:#fff;
 }
 
+#zeit.whiteBG
+{
+  color:#0078b3;
+  background-color: rgba(255, 255, 255, 0.9);
+  text-shadow: none;
+  border-radius: 40px;
+  border: 4px solid #0078b3;
+}
 #laps
 {
   position:absolute;
   top:925px;
   left:1290px;
-  /* color:0078b3; */
   height:50px;
   width:250px;
   text-align:Center;
-
   font-size:40px;
- /* Farbschema blau mit Hintergrund
-  background-color: rgba(255, 255, 255, 1);
+}
+
+#laps.whiteBG
+{
+  color:#0078b3;
+  background-color: rgba(255, 255, 255, 0.9);
+  text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
-  background-color: rgba(255, 255, 255, .9);
-*/
-
 }
 
 #laptimes
@@ -170,28 +170,32 @@ export default {
   left:50px;
   width:300px;
   height:250px;
-  /* color: #0078b3; */
-
-  font-size:40px;
-/* Farbschema blau mit Hintergrund
-  border-radius: 20px;
-  border: 4px solid #0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
   text-align:Center;
- */
+  font-size:40px;
   padding-left:10px;
   padding-top:10px;
 }
 
+#laptimes.whiteBG
+{
+  color:#0078b3;
+  background-color: rgba(255, 255, 255, 0.9);
+  text-shadow: none;
+  border-radius: 40px;
+  border: 4px solid #0078b3;
+}
+
 #laptimes table
 {
-  /* color: #0078b3; */
   font-size:30px;
   color:#fff;
   text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
-
 }
-
+#laptimes.whiteBG table
+{
+  color:#0078b3;
+  text-shadow: none;
+}
 #speed
 {
   position:absolute;
@@ -210,12 +214,15 @@ export default {
   text-align:Center;
 }
 
-/* Farbschema blau mit Hintergrund
-#speed .positivDelta
+/* Farbschema blau mit Hintergrund weiß */
+#speed.whiteBG
 {
   color:#0078b3;
+  background-color: rgba(255, 255, 255, 0.9);
+  text-shadow: none;
+  border-radius: 40px;
+  border: 4px solid #0078b3;
 }
-*/
 
 #speed .negativDelta
 {

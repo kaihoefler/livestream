@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Visualization from '../views/Visualization.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/vis',
+    name: 'Visualization',
+    component: Visualization
   },
   {
-    path: '/controller',
+    path: '/',
     name: 'Controller',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

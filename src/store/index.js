@@ -30,26 +30,30 @@ export default new Vuex.Store({
     },
     displayControl: {
       timeRace: {
+        show: true,
         showRefSpeed: false,
         refSpeed: 0,
         showRaceName: true,
         showLapTimes: true,
+        numLapTimes: 5,
         showRaceTime: true,
         showLaps: true,
-        showSpeed: true
+        showSpeed: true,
+        styleWhiteBG: false
       }
     },
     settings: {
       // urlRaceService: '/Race_times_example.json',
       urlRaceService: 'http://localhost:8090/race',
       lapDistance: 0.2,
-      numLapTimes: 5,
+      // numLapTimes: 5,
       // updateInterval: 1000
-      updateInterval: 500
+      updateInterval: 5000
     }
   },
   mutations: {
     setRace (state, newRace) {
+      // Update Race and calclulate all Values
       console.log('Setting the race to ' + newRace.raceName + ' (' + newRace.elapsedTime + ')')
       var laptimes = state.currentRace.laptimes
 
@@ -95,6 +99,32 @@ export default new Vuex.Store({
         }
       }
       state.currentRace.laptimes = laptimes
+    },
+
+    setSettings (state, newSettings) {
+      Object.assign(state.settings, newSettings)
+    },
+
+    setDisplayControlTimeRace (state, newTimeraceDisplayControl) {
+      Object.assign(state.displayControl.timeRace, newTimeraceDisplayControl)
+    },
+
+    xxxupdateUrlRaceservice (state, newValue) {
+      state.settings.urlRaceService = newValue
+    },
+
+    loadStoreFromStorage (state) {
+      // Writing of data from localStorage is implemented in main.js as a listener to the store
+      // Check if the ID exists
+      if (localStorage.getItem('store.settings')) {
+        // Replace the state object with the stored item
+        Object.assign(state.settings, JSON.parse(localStorage.getItem('store.settings')))
+      }
+
+      if (localStorage.getItem('store.displayControl.timeRace')) {
+        // Replace the state object with the stored item
+        Object.assign(state.displayControl.timeRace, JSON.parse(localStorage.getItem('store.displayControl.timeRace')))
+      }
     }
   },
   actions: {

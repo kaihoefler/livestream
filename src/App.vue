@@ -5,6 +5,18 @@
 </template>
 
 <style>
+html.viewstyle {
+  font-family: 'Ubuntu', sans-serif;
+  background-color:green;
+/* Farbschema blau mit Hintergrund
+    color:0078b3;
+*/
+/* Farbschema weis ohne Hintergrund */
+  color:#fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+
+}
+
 BODY.viewstyle {
   font-family: 'Ubuntu', sans-serif;
   background-color:green;
@@ -21,7 +33,6 @@ BODY.controllerstyle {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 
@@ -52,10 +63,15 @@ export default {
   name: 'livestream',
   methods: {
     handleStyles () {
-      // Red style to the body tag for the home page
-      if (['/'].includes(this.$route.path)) document.body.className = 'viewstyle'
+      // controllerstyle to the body tag for the home page
+      if (['/'].includes(this.$route.path)) {
+        document.body.className = 'controllerstyle'
+      } else if (['/vis'].includes(this.$route.path)) {
+        document.body.className = 'viewstyle'
+      }
+
+      // (document.body.classList.contains('controllerstyle')) document.body.className = 'viewstyle'
       // Pink style to the body tag for all other pages
-      else if (document.body.classList.contains('viewstyle')) document.body.className = 'controllerstyle'
     },
     handleQueryParams () {
       var params = []
