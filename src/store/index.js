@@ -40,6 +40,18 @@ export default new Vuex.Store({
         showLaps: true,
         showSpeed: true,
         styleWhiteBG: false
+      },
+      countdown: {
+        show: true,
+        targetTime: new Date().toISOString().split('T')[0] + ' 23:59',
+        showLabel: true
+      },
+      ticker: {
+        show: true,
+        line1: '',
+        line2: '',
+        styleWhiteBG: false,
+        laufschrift: false
       }
     },
     settings: {
@@ -109,6 +121,14 @@ export default new Vuex.Store({
       Object.assign(state.displayControl.timeRace, newTimeraceDisplayControl)
     },
 
+    setDisplayControlCountdown (state, newCountdownDisplayControl) {
+      Object.assign(state.displayControl.countdown, newCountdownDisplayControl)
+    },
+
+    setDisplayControlTicker (state, newTickerDisplayControl) {
+      Object.assign(state.displayControl.ticker, newTickerDisplayControl)
+    },
+
     xxxupdateUrlRaceservice (state, newValue) {
       state.settings.urlRaceService = newValue
     },
@@ -124,6 +144,14 @@ export default new Vuex.Store({
       if (localStorage.getItem('store.displayControl.timeRace')) {
         // Replace the state object with the stored item
         Object.assign(state.displayControl.timeRace, JSON.parse(localStorage.getItem('store.displayControl.timeRace')))
+      }
+      if (localStorage.getItem('store.displayControl.countdown')) {
+        // Replace the state object with the stored item
+        Object.assign(state.displayControl.countdown, JSON.parse(localStorage.getItem('store.displayControl.countdown')))
+      }
+      if (localStorage.getItem('store.displayControl.ticker')) {
+        // Replace the state object with the stored item
+        Object.assign(state.displayControl.ticker, JSON.parse(localStorage.getItem('store.displayControl.ticker')))
       }
     }
   },

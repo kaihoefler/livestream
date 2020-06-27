@@ -5,15 +5,13 @@
 </template>
 
 <style>
-html.viewstyle {
-  font-family: 'Ubuntu', sans-serif;
+html {
+
   background-color:green;
 /* Farbschema blau mit Hintergrund
     color:0078b3;
 */
 /* Farbschema weis ohne Hintergrund */
-  color:#fff;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 
 }
 

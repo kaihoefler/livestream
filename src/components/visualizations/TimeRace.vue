@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div v-if="displayControl.show" class="hello">
     <div id="raceName" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="displayControl.showRaceName" >{{currentRace.raceName}} &nbsp;</div>
     <div id="zeit" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showRaceTime" >{{currentRace.elapsedTime}}</div>
     <div id="laps" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLaps" >Lap {{currentRace.lapsComplete}}</div>
@@ -43,6 +43,7 @@ export default {
   props: {
     msg: String
   },
+
   computed: {
     currentRace () {
       return this.$store.state.currentRace

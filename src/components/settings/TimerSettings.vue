@@ -2,38 +2,19 @@
   <div class="card">
     <header class="card-header notification is-success">
       <p class="card-header-title is-info">
-        Time Race Settings
+        Timer Settings
       </p>
     </header>
     <div class="card-content">
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showRaceName" type="checkbox"> Show race name</label>
+        <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show timer visualization</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showRaceTime" type="checkbox"> Show race time</label>
+        <label class="checkbox"><input v-model="settings.showSeconds" type="checkbox"> Show seconds</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showLaps" type="checkbox"> Show laps</label>
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showLapTimes" type="checkbox"> Show lap times</label>
-      </div>
-      <div class="field">
-        <label class="label">Number of lap times</label>
-        <input v-model="settings.numLapTimes" class="input" type="number" step="1" min="1" max="20">
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showSpeed" type="checkbox"> Show speed</label>
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showRefSpeed" type="checkbox"> Show diff to reference speed</label>
-      </div>
-      <div class="field">
-        <label class="label">Reference Speed</label>
-        <input v-model="settings.refSpeed" class="input" type="number" step="any" min="0" max="100">
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
+        <label class="label">Target Time</label>
+        <input v-model="settings.targetTime" class="input" type="text" placeholder="hh:mm:ss" >
       </div>
     </div>
     <footer class="card-footer">

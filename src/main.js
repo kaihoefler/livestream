@@ -5,8 +5,6 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-require('./assets/font.css')
-
 new Vue({
   router,
   store,
@@ -27,6 +25,16 @@ new Vue({
         // Store the state object as a JSON string
         jsonString = JSON.stringify(state.displayControl.timeRace)
         localStorage.setItem('store.displayControl.timeRace', jsonString)
+      }
+      if (mutation.type === 'setDisplayControlCountdown') {
+        // Store the state object as a JSON string
+        jsonString = JSON.stringify(state.displayControl.countdown)
+        localStorage.setItem('store.displayControl.countdown', jsonString)
+      }
+      if (mutation.type === 'setDisplayControlTicker') {
+        // Store the state object as a JSON string
+        jsonString = JSON.stringify(state.displayControl.ticker)
+        localStorage.setItem('store.displayControl.ticker', jsonString)
       }
     })
   }
