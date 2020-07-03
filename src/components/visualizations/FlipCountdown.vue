@@ -11,6 +11,7 @@
         <span v-if="displayControl.showLabel" class="flip-clock__slot">{{ data.label }}</span>
       </span>
     </template>
+    <br /><span v-if="displayControl.showSubText" class="flip-clock__subtext">{{displayControl.subText}}</span>
   </div>
 </template>
 
@@ -242,6 +243,11 @@ export default {
   display: block;
 }
 
+.flip-clock__subtext{
+  font-size: 2rem;
+  line-height: 2.5;
+}
+
 @halfHeight: 0.72em;
 @borderRadius: 0.15em;
 
@@ -309,7 +315,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 0;
-  border-top: solid 1px #000;
+  border-top: solid 1px #aaa;
   background: #eeeeee;
   border-radius: 0 0 @borderRadius @borderRadius;
   pointer-events: none;

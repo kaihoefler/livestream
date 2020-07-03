@@ -36,14 +36,14 @@ export default {
 #ticker
 {
   position:absolute;
-  top:850px;
+  top:830px;
   left:300px;
   width:1100px;
-  height:100px;
+  height:120px;
   font-size:40px;
   text-align:center;
-  border-left: solid #e30614;
-  border-right: solid #e30614;
+  /* border-left: solid #e30614;
+  border-right: solid #e30614; */
   padding-left:10px;
   padding-right:10px;
 

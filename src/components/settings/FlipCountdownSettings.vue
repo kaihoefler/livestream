@@ -9,12 +9,24 @@
       <div class="field">
         <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show Countdown</label>
       </div>
-      <div class="field">
-        <label class="label">Target Time</label>
-        <input v-model="settings.targetTime" class="input" type="text">
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showLabel" type="checkbox"> Show Label</label>
+      <div v-bind:class="{ 'is-hidden': !settings.show }">
+        <div class="field">
+          <label class="label">Target Time</label>
+            <div class="field is-horizontal has-addons">
+                         <input v-model="settings.targetTime" class="input" type="text">
+            <button v-on:click="setTargetTimeToday" class="button">Set to Today</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="checkbox"><input v-model="settings.showLabel" type="checkbox"> Show Label</label>
+        </div>
+        <div class="field">
+          <label class="checkbox"><input v-model="settings.showSubText" type="checkbox"> Show Sub Text</label>
+        </div>
+        <div class="field">
+          <label class="label">Sub Text Line</label>
+          <input v-model="settings.subText" class="input" type="text" placeholder="Enter Text here" >
+        </div>
       </div>
     </div>
     <footer class="card-footer">
@@ -44,7 +56,9 @@ export default {
       settings: {
         show: true,
         targetTime: new Date().toISOString().split('T')[0] + ' 23:59',
-        showLabel: true
+        showLabel: true,
+        showSubText: false,
+        subText: ''
       },
 
       isDirty: false
@@ -69,6 +83,10 @@ export default {
     restoreSettings () {
       Object.assign(this.settings, this.$store.state.displayControl.countdown)
       this.isDirty = false
+    },
+
+    setTargetTimeToday () {
+      this.settings.targetTime = new Date().toISOString().split('T')[0] + ' 23:59'
     }
   },
 

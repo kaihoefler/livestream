@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div id="visualization">
     <TimeRace />
     <flip-countdown id="countdown" :deadline="flipCountdownDeadline" v-bind:showDays="false"></flip-countdown>
     <Ticker />
@@ -10,10 +10,18 @@
 #countdown
 {
   position:absolute;
-  top:50px;
-  left:1250px;
+  top:30px;
+  left:1450px;
   height:200px;
   width:400px;
+}
+#visualization{
+  background: green;
+  position:absolute;
+  top:0px;
+  left:0px;
+  height:1079px;
+  width:1920px;
 }
 </style>
 

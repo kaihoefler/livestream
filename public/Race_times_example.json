@@ -1,21 +1,31 @@
 {
 	"raceName": "1h Record trial Arena Geisingen",
 	"raceID": 13,
-	"flagStatus": "GREEN",
-	"elapsedTime": "5:15",
+	"flagStatus": "FINISH",
+	"elapsedTime": "5:18",
 	"timeOfDay": "22:28:33",
-	"lapsComplete": 17,
+	"lapsComplete": 18,
 	"lapsToGo": 0,
 	"trackName": "Arena Geisingen",
 	"competitors": [
 		{
 			"number": "23",
 			"position": 1,
-			"lapsComplete": 17,
-			"firstName": "",
-			"lastName": "",
+			"lapsComplete": 18,
+			"firstName": "Frodo",
+			"lastName": "Beutlin",
 			"totalTime": "5:14.349",
 			"bestLap": "0:15.497",
+			"lastLap": "0:18.591"
+		},
+		{
+			"number": "27",
+			"position": 2,
+			"lapsComplete": 18,
+			"firstName": "Jan",
+			"lastName": "Tester 2",
+			"totalTime": "5:14.749",
+			"bestLap": "0:15.397",
 			"lastLap": "0:18.591"
 		}
 	]

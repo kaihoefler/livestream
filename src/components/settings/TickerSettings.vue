@@ -7,21 +7,23 @@
     </header>
     <div class="card-content">
       <div class="field">
-        <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show timer visualization</label>
+        <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show Ticker visualization</label>
       </div>
-      <div class="field">
-        <label class="label">Text Line 1</label>
-        <input v-model="settings.line1" class="input" type="text" placeholder="Enter Text here" >
-      </div>
-      <div class="field">
-        <label class="label">Text Line 2</label>
-        <input v-model="settings.line2" class="input" type="text" placeholder="Enter Text here" >
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.laufschrift" type="checkbox"> Activate Marquee (Laufschrift)</label>
+      <div v-bind:class="{ 'is-hidden': !settings.show }">
+        <div class="field">
+          <label class="label">Text Line 1</label>
+          <input v-model="settings.line1" class="input" type="text" placeholder="Enter Text here" >
+        </div>
+        <div class="field">
+          <label class="label">Text Line 2</label>
+          <input v-model="settings.line2" class="input" type="text" placeholder="Enter Text here" >
+        </div>
+        <div class="field">
+          <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
+        </div>
+        <div class="field">
+          <label class="checkbox"><input v-model="settings.laufschrift" type="checkbox"> Activate Marquee (Laufschrift)</label>
+        </div>
       </div>
     </div>
     <footer class="card-footer">

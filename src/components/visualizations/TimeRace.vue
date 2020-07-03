@@ -9,7 +9,7 @@
     <div id="laptimes" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'GREEN' && displayControl.showLapTimes">
       <table >
         <tr><td width=60>Lap</td><td width=100>Time</td><td width=100>Speed</td></tr>
-        <tr v-for="laptime in laptimes" :key="laptime.lap">
+        <tr v-for="laptime in laptimes" :key="laptime.lap" >
           <td>{{ laptime.lap.toString() }}</td>
           <td>{{ laptime.time.toFixed(2) }}</td>
           <td>{{ (lapDist/laptime.time * 3600).toFixed(2) }}</td>
@@ -17,6 +17,16 @@
       </table>
     </div>
 
+    <div id="results" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'FINISH' && displayControl.showResults">
+      <table >
+        <tr><td width=100>Place</td><td width=600>Name</td><td width=100>Time</td></tr>
+        <tr v-for="result in results" :key="result.number" >
+          <td>{{ result.position.toString() }}</td>
+          <td>{{ result.firstName }} {{ result.lastName }}</td>
+          <td>{{ result.result }}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -77,7 +87,38 @@ export default {
       var numLapTimes = this.$store.state.displayControl.timeRace.numLapTimes
       var laptimes = this.$store.state.currentRace.laptimes.slice(-1 * numLapTimes).sort((a, b) => (a.lap < b.lap) ? 1 : -1)
       return laptimes.filter((element) => {
-        return element !== undefined
+        return element !== undefined && element.time > 0
+      })
+    },
+
+    results () {
+      var competitors = this.$store.state.currentRace.competitors.slice()
+      competitors.sort((a, b) => (a.position > b.position) ? 1 : -1)
+      // should we sort by Best Time?
+      if (this.$store.state.displayControl.timeRace.resultsSortedByBestTime) {
+        competitors.sort((a, b) => (a.bestLap > b.bestLap) ? 1 : -1)
+        var currentPosition = 0
+        var lastBestTime = -1
+        var counter = 0
+        competitors.forEach(element => {
+          var bestLap = calcTotalTimeInSeconds(element.bestLap)
+          if (lastBestTime < bestLap) {
+            currentPosition = counter + 1
+          }
+          element.position = currentPosition
+          counter += 1
+          lastBestTime = bestLap
+          element.result = bestLap.toFixed(3)
+        })
+      } else {
+        competitors.forEach(element => {
+          if (element !== undefined) {
+            element.result = element.totalTime
+          }
+        })
+      }
+      return competitors.filter((element) => {
+        return element !== undefined && element.lapsComplete > 0
       })
     },
 
@@ -105,7 +146,7 @@ export default {
 #raceName
 {
   position:absolute;
-  top:50px;
+  top:30px;
   left:0px;
   width:750px;
   height:50px;
@@ -127,8 +168,8 @@ export default {
 #zeit
 {
   position:absolute;
-  top:925px;
-  left:1550px;
+  top:980px;
+  left:1650px;
   height:50px;
   width:200px;
   text-align:Center;
@@ -143,11 +184,33 @@ export default {
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
+  line-height: 1;
 }
+
+#results
+{
+  position:absolute;
+  top:300px;
+  left:400px;
+  width:800px;
+  height:800px;
+  text-align:left;
+  font-size:40px;
+  padding-left:10px;
+  padding-top:10px;
+}
+
+#results table
+{
+  font-size:30px;
+  color:#fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
 #laps
 {
   position:absolute;
-  top:925px;
+  top:980px;
   left:1290px;
   height:50px;
   width:250px;
@@ -162,6 +225,7 @@ export default {
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
+  line-height: 1;
 }
 
 #laptimes
@@ -184,6 +248,7 @@ export default {
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
+  line-height: 1;
 }
 
 #laptimes table
@@ -200,7 +265,7 @@ export default {
 #speed
 {
   position:absolute;
-  top:925px;
+  top:980px;
   left:150px;
   width:550px;
   height:50px;
@@ -223,6 +288,7 @@ export default {
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
+  line-height: 1;
 }
 
 #speed .negativDelta

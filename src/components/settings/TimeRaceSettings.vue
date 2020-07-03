@@ -38,6 +38,15 @@
       <div class="field">
         <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
       </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.showResults" type="checkbox"> Show Results</label>
+      </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.resultsSortedByBestTime" type="checkbox"> Sort Results by best Lap</label>
+      </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.pauseRaceUpdate" type="checkbox"><span v-bind:class="{ 'has-text-danger has-text-weight-semibold': settings.pauseRaceUpdate }"> Pause Race Update</span></label>
+      </div>
     </div>
     <footer class="card-footer">
       <button v-on:click="saveSettings" :disabled=!isDirty class="button is-primary">Save Time Race Settings</button>
@@ -73,7 +82,10 @@ export default {
         showLaps: true,
         showSpeed: true,
         styleWhiteBG: false,
-        numLapTimes: 5
+        numLapTimes: 5,
+        showResults: false,
+        resultsSortedByBestTime: false,
+        pauseRaceUpdate: false
       },
 
       isDirty: false

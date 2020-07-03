@@ -5,6 +5,14 @@
 </template>
 
 <style>
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Ubuntu Bold'), local('Ubuntu-Bold'), url(assets/fonts/ubuntu.woff) format('woff');
+}
+
 html {
 
   background-color:green;

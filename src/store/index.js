@@ -39,12 +39,17 @@ export default new Vuex.Store({
         showRaceTime: true,
         showLaps: true,
         showSpeed: true,
-        styleWhiteBG: false
+        styleWhiteBG: false,
+        showResults: false,
+        resultsSortedByBestTime: false,
+        pauseRaceUpdate: false
       },
       countdown: {
         show: true,
         targetTime: new Date().toISOString().split('T')[0] + ' 23:59',
-        showLabel: true
+        showLabel: true,
+        showSubText: false,
+        subText: ''
       },
       ticker: {
         show: true,
@@ -67,7 +72,13 @@ export default new Vuex.Store({
     setRace (state, newRace) {
       // Update Race and calclulate all Values
       console.log('Setting the race to ' + newRace.raceName + ' (' + newRace.elapsedTime + ')')
+      // store laptimes
       var laptimes = state.currentRace.laptimes
+
+      // if raceID has changed we reset the laptimes
+      if (state.currentRace.raceID !== newRace.raceID) {
+        laptimes = []
+      }
 
       state.currentRace = newRace
 
@@ -157,6 +168,10 @@ export default new Vuex.Store({
   },
   actions: {
     updateRace (context) {
+      if (this.state.displayControl.timeRace.pauseRaceUpdate) {
+        console.log('Race update is paused')
+        return
+      }
       //      Axios.get('https:/trapp/api/users.json', { withCredentials: true })
       Axios.get(this.state.settings.urlRaceService)
         .then(response => (context.commit('setRace', response.data)))
