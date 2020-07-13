@@ -15,7 +15,7 @@
   height:200px;
   width:400px;
 }
-#visualization{
+#old_visualization{
   background: green;
   position:absolute;
   top:0px;
@@ -60,6 +60,11 @@ export default {
         console.log('Unknown storage Event with event key: ' + event.key)
       }
     })
+    document.documentElement.style.background = 'green'
+    // unload the scrollbar
+    document.documentElement.style['overflow-y'] = 'hidden' // firefox, chrome
+    document.documentElement.style['overflow-x'] = 'hidden' // firefox, chrome
+    document.body.scroll = 'no' // ie only
   }
 }
 </script>
