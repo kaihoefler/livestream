@@ -1,10 +1,10 @@
 <template>
   <div class="router">
     <div id="nav">
-      <router-link to="/vis" target="_blank"> Open Visualization</router-link>
+      <router-link to="/vis" target="_blank"> Open Visualization Page</router-link>
     </div>
 
-    <h1>This is the controller page</h1>
+    <h1>This is the Livestream controller </h1>
     <div class="columns">
       <div class="column">
           <Settings /> <br />
