@@ -36,7 +36,7 @@ export default {
 #ticker
 {
   position:absolute;
-  top:830px;
+  bottom:150px;
   left:300px;
   width:1100px;
   height:120px;

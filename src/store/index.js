@@ -28,6 +28,17 @@ export default new Vuex.Store({
       competitors: [],
       laptimes: []
     },
+    currentPointsRace: {
+      ID: null,
+      Name: '',
+      Type: '',
+      isPoints: false,
+      isElimination: false,
+      PointResults: [],
+      Eliminations: [],
+      FinishOrder: [],
+      EliminationResults: []
+    },
     displayControl: {
       timeRace: {
         show: true,
@@ -43,6 +54,14 @@ export default new Vuex.Store({
         showResults: false,
         resultsSortedByBestTime: false,
         pauseRaceUpdate: false
+      },
+      pointsRace: {
+        showPoints: true,
+        showElims: true,
+        styleWhiteBG: false,
+        numElimsToShow: 15,
+        showResults: false,
+        pausePointsUpdate: false
       },
       countdown: {
         show: true,
@@ -62,10 +81,12 @@ export default new Vuex.Store({
     settings: {
       // urlRaceService: '/Race_times_example.json',
       urlRaceService: 'http://localhost:8090/race',
+      urlPointsService: 'http://localhost/punkterennen/race_status.php',
       lapDistance: 0.2,
       // numLapTimes: 5,
       // updateInterval: 1000
-      updateInterval: 5000
+      updateInterval: 5000,
+      updateIntervalPoints: 5000
     }
   },
   mutations: {
@@ -124,12 +145,32 @@ export default new Vuex.Store({
       state.currentRace.laptimes = laptimes
     },
 
+    setPointsRace (state, newPointsRace) {
+      // Update Race and calclulate all Values
+      console.log('Setting the race to ' + newPointsRace.Name)
+      // store values
+      state.currentPointsRace = newPointsRace
+      state.currentPointsRace.Name = newPointsRace.Race.Name
+      state.currentPointsRace.ID = newPointsRace.Race.ID
+      state.currentPointsRace.Type = newPointsRace.Race.Type
+      state.currentPointsRace.isPoints = (String(newPointsRace.Race.Type).search('Points') >= 0)
+      state.currentPointsRace.isElimination = (String(newPointsRace.Race.Type).search('Elimination') >= 0)
+      // Wenn die Anzeige von PointsRace aktiviert ist und es kein TimeRace gibt (RaceID = null) dann verwenden wir diesen Renn-Namen
+      if (state.displayControl.pointsRace.show === true && state.currentRace.raceID === null) {
+        state.currentRace.raceName = newPointsRace.Race.Name
+      }
+    },
+
     setSettings (state, newSettings) {
       Object.assign(state.settings, newSettings)
     },
 
     setDisplayControlTimeRace (state, newTimeraceDisplayControl) {
       Object.assign(state.displayControl.timeRace, newTimeraceDisplayControl)
+    },
+
+    setDisplayControlPointsRace (state, newPointsraceDisplayControl) {
+      Object.assign(state.displayControl.pointsRace, newPointsraceDisplayControl)
     },
 
     setDisplayControlCountdown (state, newCountdownDisplayControl) {
@@ -145,7 +186,9 @@ export default new Vuex.Store({
     },
 
     loadStoreFromStorage (state) {
+      // we load all data from localStorage (of the browser)
       // Writing of data from localStorage is implemented in main.js as a listener to the store
+
       // Check if the ID exists
       if (localStorage.getItem('store.settings')) {
         // Replace the state object with the stored item
@@ -155,6 +198,10 @@ export default new Vuex.Store({
       if (localStorage.getItem('store.displayControl.timeRace')) {
         // Replace the state object with the stored item
         Object.assign(state.displayControl.timeRace, JSON.parse(localStorage.getItem('store.displayControl.timeRace')))
+      }
+      if (localStorage.getItem('store.displayControl.pointsRace')) {
+        // Replace the state object with the stored item
+        Object.assign(state.displayControl.pointsRace, JSON.parse(localStorage.getItem('store.displayControl.pointsRace')))
       }
       if (localStorage.getItem('store.displayControl.countdown')) {
         // Replace the state object with the stored item
@@ -173,8 +220,24 @@ export default new Vuex.Store({
         return
       }
       //      Axios.get('https:/trapp/api/users.json', { withCredentials: true })
+      // Get the race result from Leaderboard Race Service
       Axios.get(this.state.settings.urlRaceService)
         .then(response => (context.commit('setRace', response.data)))
+        .catch(error => {
+          console.log(error)
+          // we can't seem to catch the 302 status code as an error,
+          // however, since it redirects to another domain (login.microsoftonline.com) it causes
+          // a CORS error which makes error.response be undefined here.  This assumes that any time
+          // error.response is undefined that we need to redirect to the login page
+          if (typeof error.response === 'undefined') {
+            console.log('looks like redirect from call')
+          }
+          this.errored = true
+        })
+
+      // Get the race result from Punkterennen Service
+      Axios.get(this.state.settings.urlPointsService)
+        .then(response => (context.commit('setPointsRace', response.data)))
         .catch(error => {
           console.log(error)
           // we can't seem to catch the 302 status code as an error,

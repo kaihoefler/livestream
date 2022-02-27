@@ -7,14 +7,21 @@
     </header>
     <div class="card-content">
       <div class="field">
-        <label class="label">URL of Race Timing Service</label>
+        <label class="label">URL of Race Timing Service (Leaderboard)</label>
         <input v-model="settings.urlRaceService" class="input" type="text" placeholder="Text input">
       </div>
       <div class="field">
         <label class="label">Race Service Update Interval (ms)</label>
         <input v-model="settings.updateInterval" class="input" type="number">
       </div>
-     <div class="field">
+      <div class="field">
+        <label class="label">URL of Points Service (Punkterennen)</label>
+        <input v-model="settings.urlPointsService" class="input" type="text" placeholder="Text input">
+      </div>
+      <div class="field">
+        <label class="label">Points Service Update Interval (ms)</label>
+        <input v-model="settings.updateIntervalPoints" class="input" type="number">
+      </div>     <div class="field">
         <label class="label">Lap Distance (km)</label>
         <input v-model="settings.lapDistance" class="input" type="number" step="any" min="0" max="100">
       </div>

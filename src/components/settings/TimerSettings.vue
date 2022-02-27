@@ -18,7 +18,7 @@
       </div>
     </div>
     <footer class="card-footer">
-      <button v-on:click="saveSettings" :disabled=!isDirty class="button is-primary">Save Time Race Settings</button>
+      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Time Race Settings</button>
       <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Time Race Settings</button>
     </footer>
   </div>
@@ -68,7 +68,7 @@ export default {
   },
 
   methods: {
-    saveSettings () {
+    activateSettings () {
       this.$store.commit('setDisplayControlTimeRace', this.settings)
       this.isDirty = false
     },

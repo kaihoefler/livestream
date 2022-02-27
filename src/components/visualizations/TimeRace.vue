@@ -168,7 +168,7 @@ export default {
 #zeit
 {
   position:absolute;
-  top:980px;
+  bottom:40px;
   left:1650px;
   height:50px;
   width:200px;
@@ -185,6 +185,8 @@ export default {
   border-radius: 40px;
   border: 4px solid #0078b3;
   line-height: 1;
+  padding-top:12px;
+  padding-bottom:10px;
 }
 
 #results
@@ -210,7 +212,7 @@ export default {
 #laps
 {
   position:absolute;
-  top:980px;
+  bottom:40px;
   left:1290px;
   height:50px;
   width:250px;
@@ -265,7 +267,7 @@ export default {
 #speed
 {
   position:absolute;
-  top:980px;
+  bottom:40px;
   left:150px;
   width:550px;
   height:50px;

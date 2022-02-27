@@ -3,6 +3,7 @@
     <TimeRace />
     <flip-countdown id="countdown" :deadline="flipCountdownDeadline" v-bind:showDays="false"></flip-countdown>
     <Ticker />
+    <PointsRace />
   </div>
 </template>
 
@@ -28,6 +29,7 @@
 <script>
 // @ is an alias to /src
 import TimeRace from '@/components/visualizations/TimeRace.vue'
+import PointsRace from '@/components/visualizations/PointsRace.vue'
 import FlipCountdown from '@/components/visualizations/FlipCountdown.vue'
 import Ticker from '@/components/visualizations/Ticker.vue'
 
@@ -36,7 +38,8 @@ export default {
   components: {
     TimeRace,
     FlipCountdown,
-    Ticker
+    Ticker,
+    PointsRace
   },
   computed: {
     flipCountdownDeadline () {
@@ -53,7 +56,7 @@ export default {
     window.addEventListener('storage', (event) => {
     // When local storage changes, dump the list to
     // the console.
-      if (['store.settings', 'store.displayControl.timeRace', 'store.displayControl.countdown', 'store.displayControl.ticker'].includes(event.key)) {
+      if (['store.settings', 'store.displayControl.timeRace', 'store.displayControl.pointsRace', 'store.displayControl.countdown', 'store.displayControl.ticker'].includes(event.key)) {
         this.$store.commit('loadStoreFromStorage')
         console.log('New Change in localStorage: for ' + event.key)
       } else {

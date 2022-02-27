@@ -27,7 +27,7 @@
       </div>
     </div>
     <footer class="card-footer">
-      <button v-on:click="saveSettings" :disabled=!isDirty class="button is-primary">Save Ticker Settings</button>
+      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Ticker Settings</button>
       <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Ticker Settings</button>
     </footer>
   </div>
@@ -72,7 +72,7 @@ export default {
   },
 
   methods: {
-    saveSettings () {
+    activateSettings () {
       this.$store.commit('setDisplayControlTicker', this.settings)
       this.isDirty = false
     },

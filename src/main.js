@@ -10,8 +10,12 @@ new Vue({
   store,
   render: h => h(App),
   beforeCreate () {
-    // Load the data from the storage into the store
+    // Load the previous state from the local storage of the browser into the store
     this.$store.commit('loadStoreFromStorage')
+    // Idea:
+    // The configuration UI and the visualization are running in different instances (separat browser windows)
+    // The configuration UI is writing to the store which is then written to local storage
+    //
     // We register a listener to the store to catch changes to the store and write them to the localStorage
     this.$store.subscribe((mutation, state) => {
       var jsonString = ''
@@ -25,6 +29,11 @@ new Vue({
         // Store the state object as a JSON string
         jsonString = JSON.stringify(state.displayControl.timeRace)
         localStorage.setItem('store.displayControl.timeRace', jsonString)
+      }
+      if (mutation.type === 'setDisplayControlPointsRace') {
+        // Store the state object as a JSON string
+        jsonString = JSON.stringify(state.displayControl.pointsRace)
+        localStorage.setItem('store.displayControl.pointsRace', jsonString)
       }
       if (mutation.type === 'setDisplayControlCountdown') {
         // Store the state object as a JSON string

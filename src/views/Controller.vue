@@ -11,7 +11,10 @@
           <CountdownSettings /> <br />
           <TickerSettings />
       </div>
-      <div class="column"><TimeRaceSettings /></div>
+      <div class="column"><TimeRaceSettings /><br />
+          <PointsRaceSettings /></div>
+      <div class="column">1<br />
+          </div>
     </div>
   </div>
 </template>
@@ -29,6 +32,7 @@ import Settings from '@/components/settings/Settings.vue'
 import TimeRaceSettings from '@/components/settings/TimeRaceSettings.vue'
 import CountdownSettings from '@/components/settings/FlipCountdownSettings.vue'
 import TickerSettings from '@/components/settings/TickerSettings.vue'
+import PointsRaceSettings from '@/components/settings/PointsRaceSettings.vue'
 
 export default {
   name: 'Controller',
@@ -36,7 +40,8 @@ export default {
     Settings,
     TimeRaceSettings,
     CountdownSettings,
-    TickerSettings
+    TickerSettings,
+    PointsRaceSettings
   },
   mounted () {
     require('@/assets/traina_bulma.css')
