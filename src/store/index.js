@@ -20,13 +20,20 @@ function calcTotalTimeInSeconds (totalTime) {
   return elapsedSeconds
 }
 
+// todo: Split into Modules:
+// 1. Controller
+// 2. Visulisation
+// 3. Presets
+
 export default new Vuex.Store({
   state: {
     currentRace: {
       raceID: null,
       raceName: '',
+      flagStatus: '',
       competitors: [],
-      laptimes: []
+      laptimes: [],
+      startlist: []
     },
     currentPointsRace: {
       ID: null,
@@ -40,7 +47,25 @@ export default new Vuex.Store({
       EliminationResults: []
     },
     displayControl: {
+      // Activated Time Race Content
       timeRace: {
+        show: true,
+        showRefSpeed: false,
+        refSpeed: 0,
+        showRaceName: true,
+        showLapTimes: true,
+        showBestLapTimes: false,
+        numLapTimes: 5,
+        showRaceTime: true,
+        showLaps: true,
+        showSpeed: true,
+        styleWhiteBG: false,
+        showStartlist: false,
+        showResults: false,
+        resultsSortedByBestTime: false,
+        pauseRaceUpdate: false
+      },
+      timeRaceFormData: {
         show: true,
         showRefSpeed: false,
         refSpeed: 0,
@@ -63,6 +88,10 @@ export default new Vuex.Store({
         showResults: false,
         pausePointsUpdate: false
       },
+      pointsRaceFormData: {
+        // only placeholder value
+        show: true
+      },
       countdown: {
         show: true,
         targetTime: new Date().toISOString().split('T')[0] + ' 23:59',
@@ -76,26 +105,54 @@ export default new Vuex.Store({
         line2: '',
         styleWhiteBG: false,
         laufschrift: false
+      },
+      tickerFormData: {
+        // only placeholder value
+        show: true
       }
     },
     settings: {
       // urlRaceService: '/Race_times_example.json',
       urlRaceService: 'http://localhost:8090/race',
       urlPointsService: 'http://localhost/punkterennen/race_status.php',
+      pausePointsRaceUpdate: false,
       lapDistance: 0.2,
       // numLapTimes: 5,
       // updateInterval: 1000
       updateInterval: 5000,
       updateIntervalPoints: 5000
+    },
+    presets: {
+      presetList: [],
+      selectedPreset: -1,
+      dataToWriteToTimeRaceController: {
+        loadTimeRaceData: false,
+        activateTimeRaceData: false,
+        timeRaceData: {}
+      },
+      dataToWriteToPointsRaceController: {
+        loadPointsRaceData: false,
+        activatePointsRaceData: false,
+        pointsRaceData: {}
+      },
+      dataToWriteToTickerController: {
+        loadTickereData: false,
+        activateTickerData: false,
+        tickerData: {}
+      }
+
     }
   },
   mutations: {
+
+    // module Visulization
+
     setRace (state, newRace) {
       // Update Race and calclulate all Values
       console.log('Setting the race to ' + newRace.raceName + ' (' + newRace.elapsedTime + ')')
       // store laptimes
       var laptimes = state.currentRace.laptimes
-
+      var startlist = state.currentRace.startlist
       // if raceID has changed we reset the laptimes
       if (state.currentRace.raceID !== newRace.raceID) {
         laptimes = []
@@ -143,6 +200,15 @@ export default new Vuex.Store({
         }
       }
       state.currentRace.laptimes = laptimes
+
+      // if we have "PURPLE" flag we store the competitors List in the Startlist
+      if (newRace.flagStatus === 'PURPLE') {
+        startlist = []
+        state.currentRace.competitors.forEach(element => {
+          startlist.push(Object.assign({}, element))
+        })
+      }
+      state.currentRace.startlist = startlist
     },
 
     setPointsRace (state, newPointsRace) {
@@ -161,6 +227,8 @@ export default new Vuex.Store({
       }
     },
 
+    // module Controller
+
     setSettings (state, newSettings) {
       Object.assign(state.settings, newSettings)
     },
@@ -168,9 +236,15 @@ export default new Vuex.Store({
     setDisplayControlTimeRace (state, newTimeraceDisplayControl) {
       Object.assign(state.displayControl.timeRace, newTimeraceDisplayControl)
     },
+    setDisplayControlTimeRaceFormData (state, newTimeraceDisplayControl) {
+      Object.assign(state.displayControl.timeRaceFormData, newTimeraceDisplayControl)
+    },
 
     setDisplayControlPointsRace (state, newPointsraceDisplayControl) {
       Object.assign(state.displayControl.pointsRace, newPointsraceDisplayControl)
+    },
+    setDisplayControlPointsRaceFormData (state, newPointsraceDisplayControl) {
+      Object.assign(state.displayControl.pointsRaceFormData, newPointsraceDisplayControl)
     },
 
     setDisplayControlCountdown (state, newCountdownDisplayControl) {
@@ -178,6 +252,9 @@ export default new Vuex.Store({
     },
 
     setDisplayControlTicker (state, newTickerDisplayControl) {
+      Object.assign(state.displayControl.ticker, newTickerDisplayControl)
+    },
+    setDisplayControlTickerFormData (state, newTickerDisplayControl) {
       Object.assign(state.displayControl.ticker, newTickerDisplayControl)
     },
 
@@ -211,9 +288,51 @@ export default new Vuex.Store({
         // Replace the state object with the stored item
         Object.assign(state.displayControl.ticker, JSON.parse(localStorage.getItem('store.displayControl.ticker')))
       }
+      if (localStorage.getItem('store.presets.presetList')) {
+        // Replace the state object with the stored item
+        state.presets.presetList = JSON.parse(localStorage.getItem('store.presets.presetList'))
+      }
+    },
+
+    // module Presets
+    setPresetList (state, newList) {
+      state.presets.presetList = newList
+    },
+
+    persistPresetList (state) {
+      // nothing to do. This will trigger save to local store
+    },
+
+    resetTimeRaceDataToWrite (state) {
+      state.presets.dataToWriteToTimeRaceController.activateTimeRaceData = false
+      state.presets.dataToWriteToTimeRaceController.loadTimeRaceData = false
+      state.presets.dataToWriteToTimeRaceController.timeRaceData = null
+      // console.log('resetTimeRaceDataToWrite')
+    },
+
+    setTimeRaceDataToWrite (state, newValue) {
+      state.presets.dataToWriteToTimeRaceController.timeRaceData = Object.assign({}, newValue.timeRaceData)
+      state.presets.dataToWriteToTimeRaceController.activateTimeRaceData = newValue.activateTimeRaceData
+      state.presets.dataToWriteToTimeRaceController.loadTimeRaceData = newValue.loadTimeRaceData
+    },
+
+    resetPointsRaceDataToWrite (state) {
+      state.presets.dataToWriteToPointsRaceController.activatePointsRaceData = false
+      state.presets.dataToWriteToPointsRaceController.loadPointsRaceData = false
+      state.presets.dataToWriteToPointsRaceController.pointsRaceData = null
+      // console.log('resetTimeRaceDataToWrite')
+    },
+
+    setPointsRaceDataToWrite (state, newValue) {
+      state.presets.dataToWriteToPointsRaceController.pointsRaceData = Object.assign({}, newValue.pointsRaceData)
+      state.presets.dataToWriteToPointsRaceController.activatePointsRaceData = newValue.activatePointsRaceData
+      state.presets.dataToWriteToPointsRaceController.loadPointsRaceData = newValue.loadPointsRaceData
     }
+
   },
   actions: {
+
+    // module Visualization
     updateRace (context) {
       if (this.state.displayControl.timeRace.pauseRaceUpdate) {
         console.log('Race update is paused')
@@ -234,21 +353,22 @@ export default new Vuex.Store({
           }
           this.errored = true
         })
-
-      // Get the race result from Punkterennen Service
-      Axios.get(this.state.settings.urlPointsService)
-        .then(response => (context.commit('setPointsRace', response.data)))
-        .catch(error => {
-          console.log(error)
-          // we can't seem to catch the 302 status code as an error,
-          // however, since it redirects to another domain (login.microsoftonline.com) it causes
-          // a CORS error which makes error.response be undefined here.  This assumes that any time
-          // error.response is undefined that we need to redirect to the login page
-          if (typeof error.response === 'undefined') {
-            console.log('looks like redirect from call')
-          }
-          this.errored = true
-        })
+      if (!this.state.settings.pausePointsRaceUpdate) {
+        // Get the race result from Punkterennen Service
+        Axios.get(this.state.settings.urlPointsService)
+          .then(response => (context.commit('setPointsRace', response.data)))
+          .catch(error => {
+            console.log(error)
+            // we can't seem to catch the 302 status code as an error,
+            // however, since it redirects to another domain (login.microsoftonline.com) it causes
+            // a CORS error which makes error.response be undefined here.  This assumes that any time
+            // error.response is undefined that we need to redirect to the login page
+            if (typeof error.response === 'undefined') {
+              console.log('looks like redirect from call')
+            }
+            this.errored = true
+          })
+      }
     }
   },
   modules: {

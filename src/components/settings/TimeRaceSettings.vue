@@ -22,6 +22,9 @@
         <label class="checkbox"><input v-model="settings.showLapTimes" type="checkbox"> Show lap times</label>
       </div>
       <div class="field">
+        <label class="checkbox"><input v-model="settings.showBestLapTimes" type="checkbox"> Show best lap times (e.g. Flying Lap)</label>
+      </div>
+      <div class="field">
         <label class="label">Number of lap times</label>
         <input v-model="settings.numLapTimes" class="input" type="number" step="1" min="1" max="20">
       </div>
@@ -39,7 +42,10 @@
         <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showResults" type="checkbox"> Show Results</label>
+        <label class="checkbox"><input v-model="settings.showStartlist" type="checkbox"> Show Startlist (bevore Race)</label>
+      </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.showResults" type="checkbox"> Show Results (after Finish)</label>
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.resultsSortedByBestTime" type="checkbox"> Sort Results by best Lap</label>
@@ -49,8 +55,8 @@
       </div>
     </div>
     <footer class="card-footer">
-      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Time Race Settings</button>
-      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Time Race Settings</button>
+      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Settings</button>
+      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Settings</button>
     </footer>
   </div>
 </template>
@@ -62,13 +68,6 @@ export default {
   props: {
     msg: String
   },
-  computed: {
-    // use read only -> Values come from the store
-    storeSettings () {
-      return this.$store.state.displayControl.timeRace
-    }
-
-  },
 
   data: function () {
     return {
@@ -78,11 +77,13 @@ export default {
         refSpeed: 0,
         showRaceName: true,
         showLapTimes: true,
+        showBestLapTimes: false,
         showRaceTime: true,
         showLaps: true,
         showSpeed: true,
         styleWhiteBG: false,
         numLapTimes: 5,
+        showStartlist: false,
         showResults: false,
         resultsSortedByBestTime: false,
         pauseRaceUpdate: false
@@ -92,10 +93,34 @@ export default {
     }
   },
 
+  computed: {
+    dataToWriteToForm () {
+      // read the data from the store for the TimeRaceController
+      return this.$store.state.presets.dataToWriteToTimeRaceController
+    }
+  },
+
   watch: {
     settings: {
       handler (val, oldVal) {
         this.isDirty = true
+        // console.log('handler for settings: val=' + JSON.stringify(val) + ' oldVal = ' + JSON.stringify(oldVal))
+        // we write the current form data to the store (to be used for Presets)
+        this.$store.commit('setDisplayControlTimeRaceFormData', this.settings)
+      },
+      deep: true
+    },
+    dataToWriteToForm: {
+      handler (val, oldVal) {
+        if (val.activateTimeRaceData || val.loadTimeRaceData) {
+          if (val.timeRaceData) {
+            Object.assign(this.settings, val.timeRaceData)
+          }
+        }
+        if (val.activateTimeRaceData) {
+          this.activateSettings()
+        }
+        this.$store.commit('resetTimeRaceDataToWrite', null)
       },
       deep: true
     }
@@ -109,12 +134,14 @@ export default {
 
     restoreSettings () {
       Object.assign(this.settings, this.$store.state.displayControl.timeRace)
+      this.$store.commit('setDisplayControlTimeRaceFormData', this.settings)
       this.isDirty = false
     }
   },
 
   beforeMount () {
     Object.assign(this.settings, this.$store.state.displayControl.timeRace)
+    this.$store.commit('setDisplayControlTimeRaceFormData', this.settings)
     this.isDirty = false
   }
 }

@@ -6,14 +6,14 @@
 
     <h1>This is the Livestream controller </h1>
     <div class="columns">
-      <div class="column">
+      <div class="column is-one-quarter">
           <Settings /> <br />
           <CountdownSettings /> <br />
           <TickerSettings />
       </div>
-      <div class="column"><TimeRaceSettings /><br />
+      <div class="column is-one-quarter"><TimeRaceSettings /><br />
           <PointsRaceSettings /></div>
-      <div class="column">1<br />
+      <div class="column"><Presets /><br />
           </div>
     </div>
   </div>
@@ -33,6 +33,7 @@ import TimeRaceSettings from '@/components/settings/TimeRaceSettings.vue'
 import CountdownSettings from '@/components/settings/FlipCountdownSettings.vue'
 import TickerSettings from '@/components/settings/TickerSettings.vue'
 import PointsRaceSettings from '@/components/settings/PointsRaceSettings.vue'
+import Presets from '@/components/settings/Presets.vue'
 
 export default {
   name: 'Controller',
@@ -41,7 +42,8 @@ export default {
     TimeRaceSettings,
     CountdownSettings,
     TickerSettings,
-    PointsRaceSettings
+    PointsRaceSettings,
+    Presets
   },
   mounted () {
     require('@/assets/traina_bulma.css')

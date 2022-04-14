@@ -16,7 +16,7 @@ new Vue({
     // The configuration UI and the visualization are running in different instances (separat browser windows)
     // The configuration UI is writing to the store which is then written to local storage
     //
-    // We register a listener to the store to catch changes to the store and write them to the localStorage
+    // We register a listener to the vuex store to catch changes to the store and write them to the localStorage
     this.$store.subscribe((mutation, state) => {
       var jsonString = ''
       // Only when a update has been done which contains data which is in localStorage
@@ -44,6 +44,12 @@ new Vue({
         // Store the state object as a JSON string
         jsonString = JSON.stringify(state.displayControl.ticker)
         localStorage.setItem('store.displayControl.ticker', jsonString)
+      }
+      if (mutation.type === 'persistPresetList') {
+        // Store the state object as a JSON string
+        jsonString = JSON.stringify(state.presets.presetList)
+        console.log('save preset list to store:' + jsonString)
+        localStorage.setItem('store.presets.presetList', jsonString)
       }
     })
   }

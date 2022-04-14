@@ -30,8 +30,8 @@
       </div>
     </div>
     <footer class="card-footer">
-      <button v-on:click="saveSettings" :disabled=!isDirty class="button is-primary">Save Time Race Settings</button>
-      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Time Race Settings</button>
+      <button v-on:click="saveSettings" :disabled=!isDirty class="button is-primary">Save Settings</button>
+      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Settings</button>
     </footer>
   </div>
 </template>

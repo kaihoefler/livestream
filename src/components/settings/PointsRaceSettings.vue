@@ -30,8 +30,8 @@
       </div> -->
     </div>
     <footer class="card-footer">
-      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Points Race Settings</button>
-      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Points Race Settings</button>
+      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Settings</button>
+      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Settings</button>
     </footer>
   </div>
 </template>
@@ -47,6 +47,11 @@ export default {
     // use read only -> Values come from the store
     storeSettings () {
       return this.$store.state.displayControl.pointsRace
+    },
+
+    dataToWriteToForm () {
+      // read the data from the store for the TimeRaceController
+      return this.$store.state.presets.dataToWriteToPointsRaceController
     }
 
   },
@@ -70,9 +75,27 @@ export default {
     settings: {
       handler (val, oldVal) {
         this.isDirty = true
+        // we write the current form data to the store (to be used for Presets)
+        this.$store.commit('setDisplayControlPointsRaceFormData', this.settings)
+      },
+      deep: true
+    },
+
+    dataToWriteToForm: {
+      handler (val, oldVal) {
+        if (val.activatePointsRaceData || val.loadPointsRaceData) {
+          if (val.pointsRaceData) {
+            Object.assign(this.settings, val.pointsRaceData)
+          }
+        }
+        if (val.activatePointsRaceData) {
+          this.activateSettings()
+        }
+        this.$store.commit('resetPointsRaceDataToWrite', null)
       },
       deep: true
     }
+
   },
 
   methods: {

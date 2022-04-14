@@ -27,8 +27,8 @@
       </div>
     </div>
     <footer class="card-footer">
-      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Ticker Settings</button>
-      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Ticker Settings</button>
+      <button v-on:click="activateSettings" :disabled=!isDirty class="button is-primary">Activate Settings</button>
+      <button v-on:click="restoreSettings" :disabled=!isDirty class="button is-secondary">Restore Settings</button>
     </footer>
   </div>
 </template>

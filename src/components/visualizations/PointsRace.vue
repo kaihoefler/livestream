@@ -26,7 +26,7 @@
       <div style="text-align:center"> Results</div>
       <table >
         <tr><td width=100>Place</td><td width=700>Name</td><td width=100>Points</td></tr>
-        <tr v-for="result in results" :key="result.Startnumber" >
+        <tr v-for="result in pagedResult" :key="result.Startnumber" >
           <td>{{ result.Place.toString() }}</td>
           <td>{{ result.FirstName }} {{ result.LastName }}</td>
           <td><div v-if="result.Points !== null && result.Points > 0">{{ result.Points }}</div></td>
@@ -37,7 +37,7 @@
       <div style="text-align:center"> Results</div>
       <table >
         <tr><td width=100>Place</td><td width=700>Name</td><td width=100></td></tr>
-        <tr v-for="result in results" :key="result.Startnumber" >
+        <tr v-for="result in pagedResult" :key="result.Startnumber" >
           <td>{{ result.Place.toString() }}</td>
           <td>{{ result.FirstName }} {{ result.LastName }}</td>
           <td><div class="elim" v-if="result.Eliminated > 0">(Elim.)</div></td>
@@ -75,7 +75,7 @@ export default {
     elims () {
       var Eliminations = []
       if (this.$store.state.currentPointsRace.Eliminations) Eliminations = this.$store.state.currentPointsRace.Eliminations.slice()
-      return Eliminations.slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow + 1)
+      return Eliminations.slice(0, parseInt(this.$store.state.displayControl.pointsRace.numElimsToShow) + 1)
     },
 
     results () {
@@ -102,11 +102,20 @@ export default {
           if (this.$store.state.currentPointsRace.EliminationResults && this.$store.state.currentPointsRace.EliminationResults.length > 0) {
             localElimResults = this.$store.state.currentPointsRace.EliminationResults.slice()
           }
-          return localElimResults.slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow)
+          return localElimResults // .slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow)
         } else {
           return []
         }
       }
+    },
+
+    pagedResult () {
+      var rowsToShow = parseInt(this.numElimsToShow)
+      var results = this.results
+      var pages = Math.ceil(results.length / rowsToShow)
+      var currentPage = Math.trunc(((this.now - this.pagingStartTime) / 10) % pages)
+      // console.log('result.length:' + results.length + 'pages:' + pages + ' currentPage: ' + currentPage)
+      return results.slice(currentPage * rowsToShow, (currentPage + 1) * rowsToShow)
     }
 
   },
@@ -117,9 +126,21 @@ export default {
       styleWhiteBG: false,
       numElimsToShow: 15,
       showResults: false,
-      pausePointsUpdate: false
+      pausePointsUpdate: false,
+
+      // for paging of results
+      now: Math.trunc(new Date().getTime() / 1000),
+      pagingStartTime: Math.trunc(new Date().getTime() / 1000),
+      // get an intervall every second (initialized in create)
+      interval: null
 
     }
+  },
+
+  created () {
+    this.interval = setInterval(() => {
+      this.now = Math.trunc(new Date().getTime() / 1000)
+    }, 1000)
   }
 }
 </script>
@@ -151,8 +172,8 @@ export default {
 #results
 {
   position:absolute;
-  top:300px;
-  left:450px;
+  top:200px;
+  left:350px;
   /*width:800px;*/
   text-align:left;
   font-size:40px;

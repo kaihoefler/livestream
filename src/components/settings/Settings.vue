@@ -16,7 +16,11 @@
       </div>
       <div class="field">
         <label class="label">URL of Points Service (Punkterennen)</label>
-        <input v-model="settings.urlPointsService" class="input" type="text" placeholder="Text input">
+        <input v-model="settings.urlPointsService" class="input" v-bind:class="{ 'is-danger': settings.pausePointsRaceUpdate }" type="text" placeholder="Text input">
+        <p v-bind:class="{ 'is-hidden': !settings.pausePointsRaceUpdate }" class="help is-danger">The update is currently paused</p>
+      </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.pausePointsRaceUpdate" type="checkbox"> Pause update of Points Race</label>
       </div>
       <div class="field">
         <label class="label">Points Service Update Interval (ms)</label>
@@ -62,7 +66,8 @@ export default {
       settings: {
         urlRaceService: '',
         updateInterval: 0,
-        lapDistance: 0
+        lapDistance: 0,
+        pausePointsRaceUpdate: false
       },
 
       isDirty: false

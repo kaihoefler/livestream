@@ -17,13 +17,36 @@
       </table>
     </div>
 
+    <div id="bestlaps" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="(currentRace.flagStatus == 'GREEN' ) && displayControl.showBestLapTimes">
+      <table >
+        <tr><td width=40>Place</td><td width=180>Name</td><td width=80>Time</td></tr>
+        <tr v-for="result in bestLapResult" :key="result.number" >
+          <td :class="{ redtext: result.hasMaxTotalTime}">{{ result.position.toString() }}</td>
+          <td :class="{ redtext: result.hasMaxTotalTime}">{{ result.firstName.slice(0,1) }}. {{ result.lastName }}</td>
+          <td :class="{ redtext: result.hasMaxTotalTime}">{{ result.result }}</td>
+        </tr>
+      </table>
+    </div>
+
     <div id="results" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'FINISH' && displayControl.showResults">
       <table >
+        <tr><th colspan=2 style="text-align: center">Results</th></tr>
         <tr><td width=100>Place</td><td width=600>Name</td><td width=100>Time</td></tr>
-        <tr v-for="result in results" :key="result.number" >
+        <tr v-for="result in  pagedResult" :key="result.number" >
           <td>{{ result.position.toString() }}</td>
           <td>{{ result.firstName }} {{ result.lastName }}</td>
           <td>{{ result.result }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="startlist" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentRace.flagStatus == 'PURPLE' && displayControl.showStartlist">
+      <table >
+        <tr><th colspan=2 style="text-align: center">Startlist</th></tr>
+        <tr><td width=100>No.</td><td width=600>Name</td></tr>
+        <tr v-for="result in  pagedStartlist" :key="result.number" >
+          <td>{{ result.number.toString() }}</td>
+          <td>{{ result.firstName }} {{ result.lastName }}</td>
         </tr>
       </table>
     </div>
@@ -92,7 +115,10 @@ export default {
     },
 
     results () {
-      var competitors = this.$store.state.currentRace.competitors.slice()
+      // copy and filter
+      var competitors = this.$store.state.currentRace.competitors.slice().filter((element) => {
+        return element !== undefined && element.lapsComplete > 0
+      })
       competitors.sort((a, b) => (a.position > b.position) ? 1 : -1)
       // should we sort by Best Time?
       if (this.$store.state.displayControl.timeRace.resultsSortedByBestTime) {
@@ -100,8 +126,14 @@ export default {
         var currentPosition = 0
         var lastBestTime = -1
         var counter = 0
+        var maxTotalTime = -1
+        var startnumberOfMaxTotalTime = -1
         competitors.forEach(element => {
           var bestLap = calcTotalTimeInSeconds(element.bestLap)
+          if (maxTotalTime < calcTotalTimeInSeconds(element.totalTime)) {
+            maxTotalTime = calcTotalTimeInSeconds(element.totalTime)
+            startnumberOfMaxTotalTime = element.number
+          }
           if (lastBestTime < bestLap) {
             currentPosition = counter + 1
           }
@@ -110,6 +142,10 @@ export default {
           lastBestTime = bestLap
           element.result = bestLap.toFixed(3)
         })
+        if (startnumberOfMaxTotalTime > 0) {
+          var competitor = competitors.find((element) => (element.number === startnumberOfMaxTotalTime))
+          if (competitor) { competitor.hasMaxTotalTime = true }
+        }
       } else {
         competitors.forEach(element => {
           if (element !== undefined) {
@@ -117,26 +153,69 @@ export default {
           }
         })
       }
-      return competitors.filter((element) => {
-        return element !== undefined && element.lapsComplete > 0
-      })
+      return competitors
     },
 
     lapDist () {
       return this.$store.state.settings.lapDistance
+    },
+
+    pagedResult () {
+      var rowsToShow = this.displayControl.numLapTimes
+      var results = this.results
+      var pages = Math.ceil(results.length / rowsToShow)
+      var currentPage = Math.trunc(((this.now - this.pagingStartTime) / 10) % pages)
+      // console.log('result.length:' + results.length + 'pages:' + pages + ' currentPage: ' + currentPage)
+      return results.slice(currentPage * rowsToShow, (currentPage + 1) * rowsToShow)
+    },
+
+    pagedStartlist () {
+      var rowsToShow = this.displayControl.numLapTimes
+      var startlist = this.$store.state.currentRace.startlist.slice().filter((element) => {
+        return element !== undefined
+      })
+      startlist.sort((a, b) => (a.position > b.position) ? 1 : -1)
+      var pages = Math.ceil(startlist.length / rowsToShow)
+      var currentPage = Math.trunc(((this.now - this.pagingStartTime) / 10) % pages)
+      // console.log('result.length:' + results.length + 'pages:' + pages + ' currentPage: ' + currentPage)
+      return startlist.slice(currentPage * rowsToShow, (currentPage + 1) * rowsToShow)
+    },
+
+    bestLapResult () {
+      var rowsToShow = parseInt(this.displayControl.numLapTimes)
+      var results = this.results
+      var index = results.findIndex((element) => (element.hasMaxTotalTime === true))
+      var startindex = 0
+      if (index >= 0) {
+        startindex = Math.trunc(Math.max(0, index - (rowsToShow / 2)))
+      }
+      // console.log('endindex:' + (startindex + rowsToShow) + ' startindex:' + startindex)
+      return results.slice(startindex, startindex + rowsToShow)
     }
 
   },
   data: function () {
     return {
       showRaceName: true,
-      showLapTimes: true,
+      showLapTimes: false,
+      showBestLapTimes: false,
       showRaceTime: true,
       showLaps: true,
       showSpeed: true,
-      showRefSpeed: false
+      showRefSpeed: false,
 
+      // for paging of results
+      now: Math.trunc(new Date().getTime() / 1000),
+      pagingStartTime: Math.trunc(new Date().getTime() / 1000),
+      // get an intervall every second (initialized in create)
+      interval: null
     }
+  },
+  created () {
+    this.interval = setInterval(() => {
+      this.now = Math.trunc(new Date().getTime() / 1000)
+    }, 1000)
+    console.log('TimeRace Created')
   }
 }
 </script>
@@ -161,7 +240,7 @@ export default {
 #raceName.whiteBG
 {
   color:#0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   text-shadow: none;
 }
 
@@ -169,8 +248,7 @@ export default {
 {
   position:absolute;
   bottom:40px;
-  left:1650px;
-  height:50px;
+  right:50px;
   width:200px;
   text-align:Center;
 
@@ -180,7 +258,7 @@ export default {
 #zeit.whiteBG
 {
   color:#0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
@@ -189,33 +267,12 @@ export default {
   padding-bottom:10px;
 }
 
-#results
-{
-  position:absolute;
-  top:300px;
-  left:400px;
-  width:800px;
-  height:800px;
-  text-align:left;
-  font-size:40px;
-  padding-left:10px;
-  padding-top:10px;
-}
-
-#results table
-{
-  font-size:30px;
-  color:#fff;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
-}
-
 #laps
 {
   position:absolute;
   bottom:40px;
-  left:1290px;
-  height:50px;
-  width:250px;
+  right:290px;
+  width:180px;
   text-align:Center;
   font-size:40px;
 }
@@ -223,10 +280,52 @@ export default {
 #laps.whiteBG
 {
   color:#0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
+  line-height: 1;
+  padding:10px;
+}
+
+#results,
+#startlist
+{
+  position:absolute;
+  top:160px;
+  left:400px;
+  /* width:800px; */
+  text-align:left;
+  font-size:40px;
+  padding-left:10px;
+  padding-top:10px;
+}
+
+#startlist,
+#results.whiteBG
+{
+  color:#0078b3;
+  background-color: rgb(255, 255, 255);
+  text-shadow: none;
+  border-radius: 40px;
+  border: 4px solid #0078b3;
+  line-height: 1;
+  padding: 20px;
+}
+
+#startlist,
+#results table
+{
+  font-size:30px;
+  color:#fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+#startlist,
+#results.whiteBG table
+{
+  color:#0078b3;
+  text-shadow: none;
   line-height: 1;
 }
 
@@ -246,7 +345,7 @@ export default {
 #laptimes.whiteBG
 {
   color:#0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
@@ -264,6 +363,46 @@ export default {
   color:#0078b3;
   text-shadow: none;
 }
+
+#bestlaps
+{
+  position:absolute;
+  top:180px;
+  left:50px;
+  text-align:left;
+  font-size:20px;
+  padding-left:10px;
+  padding-top:10px;
+}
+
+#bestlaps.whiteBG
+{
+  color:#0078b3;
+  background-color: rgba(255, 255, 255);
+  text-shadow: none;
+  border-radius: 40px;
+  border: 4px solid #0078b3;
+  line-height: 1;
+  padding: 15px;
+}
+
+#bestlaps table
+{
+  font-size:20px;
+  color:#fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+#bestlaps.whiteBG table
+{
+  color:#0078b3;
+  text-shadow: none;
+}
+
+.redtext
+{
+  color: red;
+}
+
 #speed
 {
   position:absolute;
@@ -286,7 +425,7 @@ export default {
 #speed.whiteBG
 {
   color:#0078b3;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   text-shadow: none;
   border-radius: 40px;
   border: 4px solid #0078b3;
