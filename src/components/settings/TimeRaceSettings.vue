@@ -16,30 +16,13 @@
         <label class="checkbox"><input v-model="settings.showRaceTime" type="checkbox"> Show race time</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showLaps" type="checkbox"> Show laps</label>
+        <label class="checkbox"><input v-model="settings.showLaps" type="checkbox"> Show lap counter</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showLapTimes" type="checkbox"> Show lap times</label>
+        <label class="checkbox"><input v-model="settings.showLapTimes" type="checkbox"> Show lap time list</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showBestLapTimes" type="checkbox"> Show best lap times (e.g. Flying Lap)</label>
-      </div>
-      <div class="field">
-        <label class="label">Number of lap times</label>
-        <input v-model="settings.numLapTimes" class="input" type="number" step="1" min="1" max="20">
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showSpeed" type="checkbox"> Show speed</label>
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.showRefSpeed" type="checkbox"> Show diff to reference speed</label>
-      </div>
-      <div class="field">
-        <label class="label">Reference Speed</label>
-        <input v-model="settings.refSpeed" class="input" type="number" step="any" min="0" max="100">
-      </div>
-      <div class="field">
-        <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
+        <label class="checkbox"><input v-model="settings.showBestLapTimes" type="checkbox"> Show best lap times (Dobbin)</label>
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.showStartlist" type="checkbox"> Show Startlist (bevore Race)</label>
@@ -49,6 +32,28 @@
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.resultsSortedByBestTime" type="checkbox"> Sort Results by best Lap</label>
+      </div>
+      <div class="field">
+        <p><label class="checkbox"> Solid Background style</label></p>
+        <p><label class="checkbox"><input v-model="settings.styleWhiteBG.raceName" type="checkbox"> Race Name</label></p>
+        <p><label class="checkbox"><input v-model="settings.styleWhiteBG.laps" type="checkbox"> Laps Counter/Time</label></p>
+        <p><label class="checkbox"><input v-model="settings.styleWhiteBG.results" type="checkbox"> Results</label></p>
+      </div>
+      <div class="field">
+        <label class="checkbox"><input v-model="settings.showSpeed" type="checkbox"> Show avg. speed</label>
+      </div>
+      <div v-bind:class="{ 'is-hidden': !settings.showSpeed }">
+        <div class="field">
+          <label class="checkbox"><input v-model="settings.showRefSpeed" type="checkbox"> Show diff to reference speed</label>
+        </div>
+        <div class="field">
+          <label class="label">Reference Speed</label>
+          <input v-model="settings.refSpeed" class="input" type="number" step="any" min="0" max="100">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Num. of lines to show</label>
+        <input v-model="settings.numLapTimes" class="input" type="number" step="1" min="1" max="20">
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.pauseRaceUpdate" type="checkbox"><span v-bind:class="{ 'has-text-danger has-text-weight-semibold': settings.pauseRaceUpdate }"> Pause Race Update</span></label>
@@ -81,7 +86,11 @@ export default {
         showRaceTime: true,
         showLaps: true,
         showSpeed: true,
-        styleWhiteBG: false,
+        styleWhiteBG: {
+          raceName: false,
+          laps: false,
+          results: false
+        },
         numLapTimes: 5,
         showStartlist: false,
         showResults: false,

@@ -59,7 +59,11 @@ export default new Vuex.Store({
         showRaceTime: true,
         showLaps: true,
         showSpeed: true,
-        styleWhiteBG: false,
+        styleWhiteBG: {
+          raceName: false,
+          laps: false,
+          results: false
+        },
         showStartlist: false,
         showResults: false,
         resultsSortedByBestTime: false,

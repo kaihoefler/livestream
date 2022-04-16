@@ -22,10 +22,7 @@
       <div class="field">
         <label class="checkbox"><input v-model="settings.pausePointsRaceUpdate" type="checkbox"> Pause update of Points Race</label>
       </div>
-      <div class="field">
-        <label class="label">Points Service Update Interval (ms)</label>
-        <input v-model="settings.updateIntervalPoints" class="input" type="number">
-      </div>     <div class="field">
+     <div class="field">
         <label class="label">Lap Distance (km)</label>
         <input v-model="settings.lapDistance" class="input" type="number" step="any" min="0" max="100">
       </div>

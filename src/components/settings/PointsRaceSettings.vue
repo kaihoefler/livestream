@@ -2,12 +2,12 @@
   <div class="card">
     <header class="card-header notification is-success">
       <p class="card-header-title is-info">
-        Points / Elimination Race Settings
+        Points / Elim. Race Settings
       </p>
     </header>
     <div class="card-content">
       <div class="field">
-        <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show points (elim?) race visualization</label>
+        <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show points/elim race visualization</label>
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.showPoints" type="checkbox"> Show points</label>
@@ -23,7 +23,7 @@
         <input v-model="settings.numElimsToShow" class="input" type="number" step="1" min="1" max="20">
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate White Background style</label>
+        <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate solid background style</label>
       </div>
 <!--      <div class="field">
         <label class="checkbox"><input v-model="settings.pausePointsUpdate" type="checkbox"><span v-bind:class="{ 'has-text-danger has-text-weight-semibold': settings.pausePointsUpdate }"> Pause Points Update</span></label>

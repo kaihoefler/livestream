@@ -22,8 +22,8 @@
               Use Point Race Settings
             </label></div>
             <div><label class="checkbox">
-              <input v-model="presets.currentPreset.hasTickerSettings" type="checkbox">
-              Use Ticker Race
+              <input :disabled=true v-model="presets.currentPreset.hasTickerSettings" type="checkbox">
+              Use Ticker Settings
             </label></div>
             <button v-on:click="savePreset(false)" :disabled=!isDirty class="button is-primary">Save Preset</button>&nbsp;
             <button v-on:click="savePreset(true)" :disabled=!isDirty class="button is-primary">Save Preset as New</button>&nbsp;
@@ -50,8 +50,11 @@
         </div>
       </div>
       <footer class="card-footer">
-        <button v-on:click="showPresets" class="button is-primary">Export Preset Data</button>
-        <button v-on:click="showImportPresets" class="button is-primary">Import Preset Data</button>
+        <div class="field is-grouped">
+          <button v-on:click="showPresets" class="button is-primary">Export Preset Data</button>&nbsp;
+          <button v-on:click="showImportPresets" class="button is-primary">Import Preset Data</button>&nbsp;
+          <button v-on:click="cleanLocalStore" class="button is-danger is-small">Clean local Storage</button>
+        </div>
       </footer>
     </div>
     <div class="modal" v-bind:class="{ 'is-active': showPresetData }">
@@ -138,7 +141,11 @@ export default {
             showRaceTime: true,
             showLaps: true,
             showSpeed: true,
-            styleWhiteBG: false,
+            styleWhiteBG: {
+              raceName: false,
+              laps: false,
+              results: false
+            },
             showStartlist: false,
             showResults: false,
             resultsSortedByBestTime: false,
@@ -271,6 +278,14 @@ export default {
         console.log('Will update preset List')
         this.presetList = importedObject
       }
+    },
+    cleanLocalStore () {
+      localStorage.removeItem('store.displayControl.ticker')
+      localStorage.removeItem('store.displayControl.countdown')
+      localStorage.removeItem('store.displayControl.pointsRace')
+      localStorage.removeItem('store.displayControl.timeRace')
+      localStorage.removeItem('store.settings')
+      localStorage.removeItem('store.presets.presetList')
     }
 
   },
