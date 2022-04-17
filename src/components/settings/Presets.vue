@@ -37,7 +37,7 @@
               <th><abbr title="Preset has Ticker Settings">Ticker</abbr></th>
               <th>Action</th>
             </tr>
-            <tr v-for="(preset, index) in presetList" :key="preset.name" >
+            <tr v-for="(preset, index) in presetList" :key="preset.name" :id="(index === presets.lastActivatedPreset) ? 'selectedrow': ''" :class="{ 'is-selected': (index === presets.lastActivatedPreset)}">
               <td style="text-align:left">{{ preset.name }}</td>
               <td style="text-align:center"><input v-model="preset.hasTimeRaceSettings" type="checkbox" disabled></td>
               <td style="text-align:center"><input v-model="preset.hasPointsRaceSettings" type="checkbox" disabled></td>
@@ -169,6 +169,7 @@ export default {
 
         },
         selectedPreset: -1,
+        lastActivatedPreset: -1,
         presetList: []
       },
       showPresetData: false,
@@ -240,11 +241,13 @@ export default {
         this.$store.commit('setPointsRaceDataToWrite', { activatePointsRaceData: false, loadPointsRaceData: true, pointsRaceData: Object.assign({}, presetToLoad.pointsRaceSettings) })
       }
       this.isDirty = true
+      this.presets.lastActivatedPreset = -1
     },
 
     deletePreset (index) {
       this.presetList = this.presetList.splice(index, 1)
       this.$store.commit('persistPresetList')
+      this.presets.lastActivatedPreset = -1
     },
 
     activatePreset (index) {
@@ -257,6 +260,7 @@ export default {
       if (presetToAtvivate.hasPointsRaceSettings) {
         this.$store.commit('setPointsRaceDataToWrite', { activatePointsRaceData: true, loadPointsRaceData: false, pointsRaceData: Object.assign({}, presetToAtvivate.pointsRaceSettings) })
       }
+      this.presets.lastActivatedPreset = index
     },
     showImportPresets () {
       this.showPresetImport = true
@@ -300,4 +304,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+#selectedrow tr
+{
+  background-color: darkgray;
+  border: 2px solid black;
+  color: green;
+}
 </style>

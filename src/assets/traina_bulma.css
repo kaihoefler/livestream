@@ -2352,7 +2352,7 @@ a.box:active {
       width: 1%; }
     .table td.is-selected,
     .table th.is-selected {
-      background-color: #008CBA;
+      background-color: #D0D1CD;
       color: #fff; }
       .table td.is-selected a,
       .table td.is-selected strong,
@@ -2364,7 +2364,7 @@ a.box:active {
     .table th:not([align]) {
       text-align: left; }
   .table tr.is-selected {
-    background-color: #008CBA;
+    background-color: #D0D1CD;
     color: #fff; }
     .table tr.is-selected a,
     .table tr.is-selected strong {
