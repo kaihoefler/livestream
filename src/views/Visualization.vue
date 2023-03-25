@@ -1,15 +1,14 @@
 <template>
-  <div id="visualization">
+  <div class="visualization">
     <TimeRace />
-    <flip-countdown id="countdown" :deadline="flipCountdownDeadline" v-bind:showDays="false"></flip-countdown>
+    <flip-countdown :deadline="flipCountdownDeadline" v-bind:showDays="false"></flip-countdown>
     <Ticker />
     <PointsRace />
   </div>
 </template>
 
 <style scoped>
-
-#visualization {
+.visualization {
   position: absolute;
   top: 0;
   left: 0;

@@ -1,6 +1,6 @@
 <template>
-  <div id="controller" class="router">
-    <div id="nav">
+  <div class="controller">
+    <div class="nav">
       <router-link to="/vis" target="_blank"> Open Visualization Page</router-link>
     </div>
 
@@ -23,25 +23,24 @@
   </div>
 </template>
 
-<style >
-  #controller {
+<style scoped lang="less">
+  .controller {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
   }
 
-  #nav {
+  .nav {
     padding: 30px;
-  }
+    a {
+      font-weight: bold;
+      color: #2c3e50;
+    }
 
-  #nav a {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-
-  #nav a.router-link-exact-active {
-    color: #42b983;
+    a.router-link-exact-active {
+      color: #42b983;
+    }
   }
 </style>
 
