@@ -65,9 +65,6 @@ export default {
     PointsRaceSettings,
     Presets,
     Preview
-  },
-  mounted () {
-    require('@/assets/traina_bulma.css')
   }
 }
 </script>
