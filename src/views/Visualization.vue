@@ -8,21 +8,24 @@
 </template>
 
 <style scoped>
-#countdown
-{
-  position:absolute;
-  top:30px;
-  left:1450px;
-  height:200px;
-  width:400px;
-}
-#old_visualization{
-  background: green;
-  position:absolute;
-  top:0px;
-  left:0px;
-  height:1079px;
-  width:1920px;
+
+#visualization {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  overflow: hidden;
+
+  font-family: 'Ubuntu', sans-serif;
+  background-color:green;
+/* Farbschema blau mit Hintergrund
+    color:0078b3;
+*/
+/* Farbschema weis ohne Hintergrund */
+  color:#fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 </style>
 
@@ -63,11 +66,6 @@ export default {
         console.log('Unknown storage Event with event key: ' + event.key)
       }
     })
-    document.documentElement.style.background = 'green'
-    // unload the scrollbar
-    document.documentElement.style['overflow-y'] = 'hidden' // firefox, chrome
-    document.documentElement.style['overflow-x'] = 'hidden' // firefox, chrome
-    document.body.scroll = 'no' // ie only
   }
 }
 </script>
