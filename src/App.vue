@@ -13,54 +13,12 @@
   src: local('Ubuntu Bold'), local('Ubuntu-Bold'), url(assets/fonts/ubuntu.woff) format('woff');
 }
 
-html {
-
-  background-color:green;
-/* Farbschema blau mit Hintergrund
-    color:0078b3;
-*/
-/* Farbschema weis ohne Hintergrund */
-
-}
-
-BODY.viewstyle {
-  font-family: 'Ubuntu', sans-serif;
-  background-color:green;
-/* Farbschema blau mit Hintergrund
-    color:0078b3;
-*/
-/* Farbschema weis ohne Hintergrund */
-  color:#fff;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
-
-}
-
-BODY.controllerstyle {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
 #appx {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>
 
@@ -72,8 +30,6 @@ export default {
       // controllerstyle to the body tag for the home page
       if (['/'].includes(this.$route.path)) {
         document.body.className = 'controllerstyle'
-      } else if (['/vis'].includes(this.$route.path)) {
-        document.body.className = 'viewstyle'
       }
 
       // (document.body.classList.contains('controllerstyle')) document.body.className = 'viewstyle'
@@ -98,6 +54,8 @@ export default {
   mounted () {
     this.handleStyles()
     this.handleQueryParams()
+
+    require('@/assets/traina_bulma.css')
   },
   // Handle styles when the route changes
   watch: {
