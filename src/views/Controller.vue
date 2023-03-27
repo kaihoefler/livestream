@@ -1,6 +1,6 @@
 <template>
-  <div class="router">
-    <div id="nav">
+  <div class="controller">
+    <div class="nav">
       <router-link to="/vis" target="_blank"> Open Visualization Page</router-link>
     </div>
 
@@ -13,17 +13,35 @@
       </div>
       <div class="column is-one-quarter"><TimeRaceSettings /><br />
           <PointsRaceSettings /></div>
-      <div class="column"><Presets /><br />
-          </div>
+      <div class="column">
+        <Preview />
+        <br />
+        <Presets />
+      </div>
+
     </div>
   </div>
 </template>
 
-<style >
-  /* @import '@/assets/traina_bulma.css';
-  /* <link rel="stylesheet" href="<%= BASE_URL %>css/traina_bulma.css">
-    <link rel="stylesheet" href="<%= BASE_URL %>css/font-awesome.min.css">
-    */
+<style scoped lang="less">
+  .controller {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+  }
+
+  .nav {
+    padding: 30px;
+    a {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    a.router-link-exact-active {
+      color: #42b983;
+    }
+  }
 </style>
 
 <script>
@@ -34,6 +52,7 @@ import CountdownSettings from '@/components/settings/FlipCountdownSettings.vue'
 import TickerSettings from '@/components/settings/TickerSettings.vue'
 import PointsRaceSettings from '@/components/settings/PointsRaceSettings.vue'
 import Presets from '@/components/settings/Presets.vue'
+import Preview from '@/components/settings/Preview.vue'
 
 export default {
   name: 'Controller',
@@ -43,10 +62,8 @@ export default {
     CountdownSettings,
     TickerSettings,
     PointsRaceSettings,
-    Presets
-  },
-  mounted () {
-    require('@/assets/traina_bulma.css')
+    Presets,
+    Preview
   }
 }
 </script>

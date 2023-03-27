@@ -216,6 +216,14 @@ export default {
 </script>
 
 <style scoped lang="less">
+.container {
+  position: absolute;
+  top: 30px;
+  left: 1450px;
+  height: 200px;
+  width: 400px;
+}
+
 .flip-clock {
   text-align: center;
   perspective: 600px;
