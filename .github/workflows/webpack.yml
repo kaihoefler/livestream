@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+Bname: NodeJS with Webpack
 
 on:
   push:
@@ -26,7 +26,9 @@ jobs:
     - name: Build
       run: |
         npm install
-        npx webpack
+        npm lint
+        npm build
+
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
