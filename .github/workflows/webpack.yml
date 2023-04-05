@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
-## removed Node Version 18.x
+        node-version: [16.x]
+## removed Node Version 14.x and 18.x
     steps:
     - uses: actions/checkout@v3
 
@@ -34,4 +34,4 @@ jobs:
         branch: gh-pages
         folder: dist
         clean: true
-        dry-run: ${{ github.ref != 'refs/heads/main' }}
+        dry-run: ${{ github.ref != 'refs/heads/master' }}
