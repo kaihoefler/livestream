@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/livestream/precache-manifest.5c0ccca188df5db2fed0ef5d73bb3766.js"
+  "/livestream/precache-manifest.0f9b330ff4a44fb43fb489a986aacb14.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "livestream"});
