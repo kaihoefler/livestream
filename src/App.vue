@@ -13,6 +13,10 @@
   src: local('Ubuntu Bold'), local('Ubuntu-Bold'), url(assets/fonts/ubuntu.woff) format('woff');
 }
 
+html {
+  overflow-y: auto !important; /* override bulma */
+}
+
 #appx {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
