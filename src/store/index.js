@@ -41,10 +41,12 @@ export default new Vuex.Store({
       Type: '',
       isPoints: false,
       isElimination: false,
+      isTime: false,
       PointResults: [],
       Eliminations: [],
       FinishOrder: [],
-      EliminationResults: []
+      EliminationResults: [],
+      TimeResults: []
     },
     displayControl: {
       // Activated Time Race Content
@@ -225,8 +227,9 @@ export default new Vuex.Store({
       state.currentPointsRace.Type = newPointsRace.Race.Type
       state.currentPointsRace.isPoints = (String(newPointsRace.Race.Type).search('Points') >= 0)
       state.currentPointsRace.isElimination = (String(newPointsRace.Race.Type).search('Elimination') >= 0)
+      state.currentPointsRace.isTime = (String(newPointsRace.Race.Type).search('Time') >= 0)
       // Wenn die Anzeige von PointsRace aktiviert ist und es kein TimeRace gibt (RaceID = null) dann verwenden wir diesen Renn-Namen
-      if (state.displayControl.pointsRace.show === true && state.currentRace.raceID === null) {
+      if (state.displayControl.pointsRace.show === true && (state.currentRace.raceID === null || state.currentRace.raceName === '')) {
         state.currentRace.raceName = newPointsRace.Race.Name
       }
     },

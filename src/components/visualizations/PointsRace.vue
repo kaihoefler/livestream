@@ -3,11 +3,22 @@
     <div id="points" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="currentPointsRace.isPoints && displayControl.showPoints && points.length > 0">
       <table >
         <tr><th colspan="3">Points</th></tr>
-        <tr><th>No.</th><th width=200>Name</th><th>Pts</th></tr>
+        <tr><th>No.</th><th style="max-width: 200px" class="truncated-text">Name</th><th>Pts</th></tr>
         <tr v-for="point in points" :key="point.Place" >
           <td style="text-align:right">{{ point.Startnumber.toString() }}</td>
-          <td style="text-align:left">{{ point.FirstName.toString().substring(0,1) }}. {{ point.LastName.toString() }}</td>
-          <td>{{ point.Points.toString() }}</td>
+          <td style="text-align:left; max-width: 200px" class="truncated-text">{{ point.FirstName.toString().substring(0,1) }}. {{ point.LastName.toString() }}</td>
+          <td style="text-align:right">{{ point.Points.toString() }}</td>
+        </tr>
+      </table>
+    </div>
+    <div id="times" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="!currentPointsRace.isPoints && currentPointsRace.isTime && displayControl.showPoints && times.length > 0">
+      <table >
+        <tr><th colspan="3">Times</th></tr>
+        <tr><th>No.</th><th style="max-width: 200px" class="truncated-text">Name</th><th>Time</th></tr>
+        <tr v-for="time in times" :key="time.Startnumber" >
+          <td style="text-align:right">{{ time.Startnumber.toString() }}</td>
+          <td style="text-align:left; max-width: 200px" class="truncated-text">{{ time.FirstName.toString().substring(0,1) }}. {{ time.LastName.toString() }}</td>
+          <td style="text-align:right">{{ time.FinishTime.toString() }}</td>
         </tr>
       </table>
     </div>
@@ -30,11 +41,12 @@
         <tr v-for="result in pagedResult" :key="result.Startnumber" >
           <td>{{ result.Place.toString() }}</td>
           <td>{{ result.FirstName }} {{ result.LastName }}</td>
-          <td><div v-if="result.Points !== null && result.Points > 0">{{ result.Points }}</div>
+          <td style="text-align:right"><div v-if="result.Points !== null && result.Points > 0">{{ result.Points }}</div>
               <div class="elim" v-if="result.Eliminated > 0">elim.</div></td>
         </tr>
       </table>
     </div>
+<!-- Elim Results -->
     <div id="results" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="displayControl.showResults && currentPointsRace.isElimination && !currentPointsRace.isPoints">
       <table >
         <tr><th colspan=3 >Results</th></tr>
@@ -46,6 +58,19 @@
         </tr>
       </table>
     </div>
+<!-- Time Results -->
+    <div id="results" v-bind:class="{ whiteBG: displayControl.styleWhiteBG}" v-if="displayControl.showResults && currentPointsRace.isTime && !currentPointsRace.isElimination && !currentPointsRace.isPoints">
+      <table >
+        <tr><th colspan=3 >Results</th></tr>
+        <tr><th>Pos.</th><th width=600>Name</th><th width=100></th></tr>
+        <tr v-for="result in pagedResult" :key="result.Startnumber" >
+          <td>{{ result.Place.toString() }}</td>
+          <td>{{ result.FirstName }} {{ result.LastName }}</td>
+          <td style="text-align:right"><div v-if="result.FinishTime !== null && result.FinishTime > 0">{{ result.FinishTime }}</div></td>
+        </tr>
+      </table>
+    </div>
+
   </div>
 </template>
 
@@ -71,6 +96,14 @@ export default {
       if (this.$store.state.currentPointsRace.PointResults) PointResults = this.$store.state.currentPointsRace.PointResults.slice()
       return PointResults.slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow + 1).filter((element) => {
         return element !== undefined && element.Points !== null && element.Points > 0
+      })
+    },
+
+    times () {
+      var TimeResults = []
+      if (this.$store.state.currentPointsRace.TimeResults) TimeResults = this.$store.state.currentPointsRace.TimeResults.slice()
+      return TimeResults.slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow + 1).filter((element) => {
+        return element !== undefined && element.FinishTime !== null && element.FinishTime > 0
       })
     },
 
@@ -105,11 +138,10 @@ export default {
         if (this.$store.state.currentPointsRace.PointResults) {
           localPointResults = this.$store.state.currentPointsRace.PointResults.slice()
           // Filter all Results with FinishOrder = 999 and not eliminated (Did not finish)
-          localPointResults.filter((element) => {
-            return element !== undefined && element.FinishOrder >= 999 && element.Eliminated === 0
+          return localPointResults.filter((element) => {
+            return element !== undefined && ((element.Points !== null && element.Points > 0) || element.FinishOrder < 999) && element.Eliminated === 0
           })
         }
-
         return localPointResults
       } else { // for elimination races we wait for the EliminationResults being available
         if (this.$store.state.currentPointsRace.isElimination) {
@@ -118,8 +150,16 @@ export default {
             localElimResults = this.$store.state.currentPointsRace.EliminationResults.slice()
           }
           return localElimResults // .slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow)
-        } else {
-          return []
+        } else { // it is a pure Time Race (Manual Time Input)
+          if (this.$store.state.currentPointsRace.isTime) {
+            var localTimeResults = []
+            if (this.$store.state.currentPointsRace.TimeResults && this.$store.state.currentPointsRace.TimeResults.length > 0) {
+              localTimeResults = this.$store.state.currentPointsRace.TimeResults.slice()
+            }
+            return localTimeResults // .slice(0, this.$store.state.displayControl.pointsRace.numElimsToShow)
+          } else {
+            return []
+          }
         }
       }
     },
@@ -273,6 +313,17 @@ table
   padding-top:10px;
 }
 
+#times
+{
+  /* Points from bottom and to the left */
+  position:absolute;
+  top:160px;
+  left:40px;
+  text-align:Center;
+  font-size:20px;
+  padding-left:5px;
+  padding-top:10px;
+}
 /* #points.whiteBG
 {
   color:#0078b3;

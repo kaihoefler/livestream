@@ -17,7 +17,7 @@
 
   overflow: hidden;
 
-  font-family: 'Ubuntu', sans-serif;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   background-color:green;
 /* Farbschema blau mit Hintergrund
     color:0078b3;

@@ -117,17 +117,23 @@ export default {
     results () {
       // copy and filter
       var competitors = this.$store.state.currentRace.competitors.slice().filter((element) => {
-        return element !== undefined && element.lapsComplete > 0
+        if (this.$store.state.displayControl.timeRace.showBestLapTimes) {
+          return element !== undefined && calcTotalTimeInSeconds(element.bestLap) > 0
+        } else {
+          return element !== undefined && element.lapsComplete > 0
+        }
       })
       competitors.sort((a, b) => (a.position > b.position) ? 1 : -1)
       // should we sort by Best Time?
       if (this.$store.state.displayControl.timeRace.resultsSortedByBestTime || this.$store.state.displayControl.timeRace.showBestLapTimes) {
+        // sort competitors by bestLap Value
         competitors.sort((a, b) => (a.bestLap > b.bestLap) ? 1 : -1)
         var currentPosition = 0
         var lastBestTime = -1
         var counter = 0
         var maxTotalTime = -1
         var startnumberOfMaxTotalTime = -1
+        // calculation of the starter which past the line last
         competitors.forEach(element => {
           var bestLap = calcTotalTimeInSeconds(element.bestLap)
           if (maxTotalTime < calcTotalTimeInSeconds(element.totalTime)) {
@@ -138,6 +144,10 @@ export default {
             currentPosition = counter + 1
           }
           element.position = currentPosition
+          if (element.qualiPosition !== undefined) {
+            element.position = element.qualiPosition
+          }
+          // element.position = (element.qualiPosition !== undefined) ? currentPosition : element.qualiPosition
           counter += 1
           lastBestTime = bestLap
           element.result = bestLap.toFixed(3)
@@ -239,7 +249,7 @@ export default {
 
 #raceName.whiteBG
 {
-  color:#0078b3;
+  color:#000000;
   background-color: rgba(255, 255, 255);
   text-shadow: none;
 }

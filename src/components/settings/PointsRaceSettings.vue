@@ -10,7 +10,7 @@
         <label style="center" class="checkbox"><input v-model="settings.show" type="checkbox"> Show points/elim race visualization</label>
       </div>
       <div class="field">
-        <label class="checkbox"><input v-model="settings.showPoints" type="checkbox"> Show points</label>
+        <label class="checkbox"><input v-model="settings.showPoints" type="checkbox"> Show points / times</label>
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.showElims" type="checkbox"> Show eliminations</label>
@@ -22,9 +22,10 @@
         <label class="label">Number of points/elims to show</label>
         <input v-model="settings.numElimsToShow" class="input" type="number" step="1" min="1" max="20">
       </div>
-      <div class="field">
+<!--      <div class="field">
         <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate solid background style</label>
       </div>
+-->
 <!--      <div class="field">
         <label class="checkbox"><input v-model="settings.pausePointsUpdate" type="checkbox"><span v-bind:class="{ 'has-text-danger has-text-weight-semibold': settings.pausePointsUpdate }"> Pause Points Update</span></label>
       </div> -->
@@ -61,7 +62,7 @@ export default {
       settings: {
         showPoints: true,
         showElims: true,
-        styleWhiteBG: false,
+        styleWhiteBG: true,
         numElimsToShow: 15,
         showResults: false,
         pausePointsUpdate: false

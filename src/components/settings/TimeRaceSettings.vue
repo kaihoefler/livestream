@@ -37,7 +37,7 @@
         <p><label class="checkbox"> Solid Background style</label></p>
         <p><label class="checkbox"><input v-model="settings.styleWhiteBG.raceName" type="checkbox"> Race Name</label></p>
         <p><label class="checkbox"><input v-model="settings.styleWhiteBG.laps" type="checkbox"> Laps Counter/Time</label></p>
-        <p><label class="checkbox"><input v-model="settings.styleWhiteBG.results" type="checkbox"> Results</label></p>
+    <!--    <p><label class="checkbox"><input v-model="settings.styleWhiteBG.results" type="checkbox"> Results</label></p> -->
       </div>
       <div class="field">
         <label class="checkbox"><input v-model="settings.showSpeed" type="checkbox"> Show avg. speed</label>
@@ -89,7 +89,7 @@ export default {
         styleWhiteBG: {
           raceName: false,
           laps: false,
-          results: false
+          results: true
         },
         numLapTimes: 5,
         showStartlist: false,
