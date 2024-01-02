@@ -22,10 +22,10 @@
         <label class="label">Number of points/elims to show</label>
         <input v-model="settings.numElimsToShow" class="input" type="number" step="1" min="1" max="20">
       </div>
-<!--      <div class="field">
+      <div class="field">
         <label class="checkbox"><input v-model="settings.styleWhiteBG" type="checkbox"> Activate solid background style</label>
       </div>
--->
+
 <!--      <div class="field">
         <label class="checkbox"><input v-model="settings.pausePointsUpdate" type="checkbox"><span v-bind:class="{ 'has-text-danger has-text-weight-semibold': settings.pausePointsUpdate }"> Pause Points Update</span></label>
       </div> -->
